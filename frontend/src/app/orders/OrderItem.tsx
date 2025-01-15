@@ -1,5 +1,5 @@
 "use client";
-import { Order } from "./types";
+import { Order } from "../types";
 
 interface OrderItemProps {
   order: Order;
