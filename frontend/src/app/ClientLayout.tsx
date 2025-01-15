@@ -35,6 +35,18 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                 >
                   주문 내역
                 </Link>
+                <Link
+                  href="/api/productAPI"
+                  className="text-gray-700 hover:text-gray-900 font-medium text-sm transition-colors duration-200"
+                >
+                  상품조회API
+                </Link>
+                <Link
+                  href="/api/orderAPI"
+                  className="text-gray-700 hover:text-gray-900 font-medium text-sm transition-colors duration-200"
+                >
+                  주문조회API
+                </Link>
               </div>
             </div>
           </nav>
