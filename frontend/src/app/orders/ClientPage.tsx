@@ -23,6 +23,8 @@ export default function ClientPage() {
     }
 
     const responseBody: OrderResponse = await response.json();
+    console.log("서버 응답:", responseBody); // 응답 확인을 위한 로그 추가
+
     if (responseBody.statusCode != 200) {
       if (responseBody.statusCode == 404) {
         alert("입력한 이메일에 대한 주문 내역이 없습니다.");
