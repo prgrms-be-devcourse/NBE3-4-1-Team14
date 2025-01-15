@@ -25,4 +25,15 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
+    public boolean existsByUsername(String username) {
+        return adminRepository.existsByUsername(username);
+    }
+
+    public void createAdminAccountIfNotExist() {
+        String adminUsername = "admin";
+        String adminRawPassword = "1234";
+        if (!existsByUsername(adminUsername)) {
+            createAdmin(adminUsername, adminRawPassword);
+        }
+    }
 }
