@@ -9,9 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,5 +33,10 @@ public class Admin extends BaseEntity {
 
     public void encodePassword(BCryptPasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+
+    @Override
+    public String toString() {
+        return "{ username = " + username + ", password = " + password + " }";
     }
 }
