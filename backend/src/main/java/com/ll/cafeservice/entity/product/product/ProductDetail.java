@@ -18,4 +18,14 @@ public class ProductDetail extends BaseEntity {
     private double price;           // 가격
 
     private Long imageId;           // 제품 이미지
+
+    protected ProductDetail() {
+    }
+
+    public ProductDetail(String name, String description, double price, Long imageId) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imageId = imageId;
+    }
 }
