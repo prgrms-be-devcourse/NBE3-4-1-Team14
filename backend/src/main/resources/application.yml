@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: Cafe-Service
+  profiles:
+    active: dev
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/CafeService
+    username: root
+    password: lldj123414
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  hikari:
+    auto-commit: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+
+springdoc:
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
+    org.springframework.transaction.interceptor: TRACE
