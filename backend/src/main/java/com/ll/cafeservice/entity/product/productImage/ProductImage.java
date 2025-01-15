@@ -3,7 +3,9 @@ package com.ll.cafeservice.entity.product.productImage;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class ProductImage extends BaseEntity {
 

@@ -1,5 +1,6 @@
 package com.ll.cafeservice.domain.product.dto.response;
 
+import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public record ProductInfoResponse (

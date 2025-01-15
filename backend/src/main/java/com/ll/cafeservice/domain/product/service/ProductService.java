@@ -1,18 +1,17 @@
 package com.ll.cafeservice.domain.product.service;
 
 import com.ll.cafeservice.domain.product.NewProduct;
-import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.domain.product.dto.request.ProductCreateRequest;
 import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
 import com.ll.cafeservice.domain.product.implement.ProductValidator;
-import com.ll.cafeservice.entity.product.product.ProductDetail;
+import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +20,10 @@ public class ProductService {
     private final ProductManager productManager;
     private final ProductReader productReader;
     private final ProductValidator productValidator;
+    private final ProductDetailRepository productDetailRepository;
 
     public ProductCreateResponse addProduct(final ProductCreateRequest request) {
-        
+
         // 1. Request 정보를 이용하여 새로운 품목 (NewProduct 클래스)를 생성
         NewProduct newProduct = new NewProduct(
                 request.name(),
@@ -39,18 +39,17 @@ public class ProductService {
         return new ProductCreateResponse(1L, "1");
     }
 
-    public void func(){
-        Product product = new Product();
-
-    }
 
     public List<ProductInfoResponse> getList() {
         return productReader.findAll().stream()
                 .map(product -> {
-                    // 도메인 객체를 Response 형태로 변환
-                    ProductInfoResponse response = new ProductInfoResponse(1L, "1", 1, "1");
-                    return response;
-                }).toList();
+                    return new ProductInfoResponse(
+                            product.getId(),
+                            product.getName(),
+                            product.getPrice(),
+                            product.getDescription()
+                    );
+                })
+                .collect(Collectors.toList());
     }
-
 }
