@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: Cafe-Service
   profiles:
@@ -8,8 +10,8 @@ spring:
       fail-on-empty-beans: false
   datasource:
     url: jdbc:mysql://localhost:3306/CafeService
-    username: root
-    password: lldj123414
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     auto-commit: false
