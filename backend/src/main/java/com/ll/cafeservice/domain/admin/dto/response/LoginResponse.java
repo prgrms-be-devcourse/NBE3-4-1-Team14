@@ -1,4 +1,4 @@
-package com.ll.cafeservice.domain.user.dto.response;
+package com.ll.cafeservice.domain.admin.dto.response;
 
 import org.springframework.lang.NonNull;
 
