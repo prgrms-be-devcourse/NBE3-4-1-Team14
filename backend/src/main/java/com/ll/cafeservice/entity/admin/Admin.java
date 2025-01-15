@@ -35,8 +35,4 @@ public class Admin extends BaseEntity {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    @Override
-    public String toString() {
-        return "{ username = " + username + ", password = " + password + " }";
-    }
 }
