@@ -41,4 +41,13 @@ class AdminServiceTest {
         assertEquals(admin.getUsername(), createdAdmin.getUsername());
         assertTrue(encoder.matches("1234", createdAdmin.getPassword()));
     }
+
+    @Test
+    @DisplayName("삽입된 데이터 검증 테스트")
+    void testSavedAdminData() {
+        adminService.createAdmin("testAdmin", "1234");
+        Admin foundAdmin = (Admin) adminRepository.findByUsername("testAdmin").orElseThrow();
+        assertEquals(admin.getUsername(), foundAdmin.getUsername());
+        assertTrue(encoder.matches("1234", foundAdmin.getPassword()));
+    }
 }
