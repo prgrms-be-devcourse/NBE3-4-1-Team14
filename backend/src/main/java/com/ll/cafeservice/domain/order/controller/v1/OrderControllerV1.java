@@ -38,27 +38,12 @@ public class OrderControllerV1 {
     }
 
 
-/*
-    /**
-     *  주문요청 비즈니스 로직 처리후, 처리결과를 반환
-     * @param request 주문요청 정보
-     * @return 주문요청 결과
 
-    @PostMapping
-    @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
-    public Result<OrderResponse> order(
-        @RequestBody @Valid OrderRequest request
-    ){
-        log.info("주문 요청이 왔습니다.");
-        return Result.success(orderService.order(request));
+    //일단은 email로 삭제처리 한번에 다 삭제됨
+    @DeleteMapping
+    @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
+    public Result<String>deleteOrder(@RequestParam String email){
+        log.info("주문삭제요청이 왔습니다.");
+        return Result.success("주문취소완료");
     }
-    */
-/*
-    // 이메일에 해당하는 주문 내역을 확인한다.
-    @GetMapping("/{email}")
-    public Result<List<OrderResponse>> list(
-            @PathVariable String email
-    ){
-        return Result.success(orderService.getList(email));
-    }*/
 }

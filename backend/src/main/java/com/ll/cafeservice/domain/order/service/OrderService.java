@@ -37,7 +37,7 @@ public class OrderService {
         order.setOrderItems(orderItems);
 
         double totalPrice = calculateTotalPrice(orderItems);
-        order.setTotalPrice(totalPrice);
+        //order.setTotalPrice(totalPrice);
         orderRepository.save(order);
         return new OrderResponse(order.getId(),order.getEmail(),orderItems);
     }
@@ -54,14 +54,6 @@ public class OrderService {
         return response;
     }
 
-    public OrderStatus alterOrderStatus(OrderItem orderItem){
-        LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
-        if(orderItem.getOrderDateTime().isBefore(standardTime)){
-            return OrderStatus.COMPLETED;
-        }else{
-            return OrderStatus.WAITING;
-        }
-    }
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
         OrderItem orderItem = new OrderItem();
@@ -87,6 +79,20 @@ public class OrderService {
         }
         return orderItems;
     }
+    public void deleteOrder(String email){
+        List<Order> orders = orderRepository.findByEmail(email);
+        if(orders.isEmpty()){
+            throw new IllegalArgumentException("삭제 가능한 주문이 없습니다.");
+        }
+        for(Order order : orders){
+            for(OrderItem orderItem : order.getOrderItems()){
+                orderItem.setStatus(OrderStatus.CANCELED);
+            }
+            orderRepository.save(order);
+        }
+    }
+
+
     private double calculateTotalPrice(List<OrderItem> orderItems){
         double totalPrice = 0;
         for(OrderItem orderItem : orderItems){
@@ -97,6 +103,15 @@ public class OrderService {
     private ProductDetail getProduct(Long productId){
         Optional<ProductDetail> product = this.productDetailRepository.findById(productId);
         return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
+    }
+
+    public OrderStatus alterOrderStatus(OrderItem orderItem){
+        LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
+        if(orderItem.getOrderDateTime().isBefore(standardTime)){
+            return OrderStatus.COMPLETED;
+        }else{
+            return OrderStatus.WAITING;
+        }
     }
 
     // 주문 하루넘은거 처리하기 - status 변경하기 /

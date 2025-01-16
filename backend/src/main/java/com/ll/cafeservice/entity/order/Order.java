@@ -28,7 +28,7 @@ public class Order extends BaseEntity {
     private String address;         // 배송 주소
 
 
-    private double totalPrice;     // 총 가격
+    //private double totalPrice;     // 총 가격
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
