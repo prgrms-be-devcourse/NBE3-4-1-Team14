@@ -23,4 +23,10 @@ public class GlobalExceptionHandler {
     public Result<Empty> handleResourceNotFoundException(ResourceNotFoundException e) {
         return Result.error(400, e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ImageStoreException.class)
+    public Result<Empty> handleImageStoreException(ImageStoreException e) {
+        return Result.error(500, e.getMessage());
+    }
 }
