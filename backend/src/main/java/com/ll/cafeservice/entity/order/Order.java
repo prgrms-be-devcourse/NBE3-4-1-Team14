@@ -1,5 +1,6 @@
 package com.ll.cafeservice.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -30,5 +31,14 @@ public class Order extends BaseEntity {
     private double totalPrice;     // 총 가격
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<OrderItem> orderItems;
+
+    public void addOrderItem(OrderItem orderItem) {
+        if (orderItems == null) {
+            orderItems = new ArrayList<>();
+        }
+        orderItems.add(orderItem);
+        orderItem.setOrder(this); // 양방향 연관관계 설정
+    }
 }

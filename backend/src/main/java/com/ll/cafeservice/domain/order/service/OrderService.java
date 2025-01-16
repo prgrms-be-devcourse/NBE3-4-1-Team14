@@ -7,6 +7,7 @@ import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.order.*;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -30,14 +32,13 @@ public class OrderService {
 
         order.setEmail(request.email());
         order.setAddress(request.address());
-        orderRepository.save(order);
 
         List<OrderItem>orderItems = createOrderItems(request,order);
         order.setOrderItems(orderItems);
 
         double totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
-
+        orderRepository.save(order);
         return new OrderResponse(order.getId(),order.getEmail(),orderItems);
     }
 
@@ -80,8 +81,9 @@ public class OrderService {
         for(OrderItemRequest itemRequest : request.orderItems()){
             ProductDetail product = getProduct(itemRequest.productId());
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
+            order.addOrderItem(orderItem);
             orderItems.add(orderItem);
-            orderItemRepository.save(orderItem);
+            //orderItemRepository.save(orderItem);
         }
         return orderItems;
     }
