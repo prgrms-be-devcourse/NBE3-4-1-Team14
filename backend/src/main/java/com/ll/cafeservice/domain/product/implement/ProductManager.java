@@ -1,10 +1,8 @@
 package com.ll.cafeservice.domain.product.implement;
 
 import com.ll.cafeservice.domain.product.NewProduct;
-import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
-import com.ll.cafeservice.entity.product.productImage.ProductImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductManager {
 
-    private final ProductImageRepository productImageRepository;
     private final ProductDetailRepository productDetailRepository;
 
     public long addProduct(NewProduct product) {

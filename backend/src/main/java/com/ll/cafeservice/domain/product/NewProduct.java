@@ -11,4 +11,5 @@ public class NewProduct {
     private final Integer price;
     private final String description;
     private final Integer quantity;
+    private final String ImgUrl;
 }

@@ -15,5 +15,8 @@ public record ProductInfoResponse (
         Integer price,
 
         @NonNull
-        String description
+        String description,
+
+        @NonNull
+        String ImageUrl
 ){ }

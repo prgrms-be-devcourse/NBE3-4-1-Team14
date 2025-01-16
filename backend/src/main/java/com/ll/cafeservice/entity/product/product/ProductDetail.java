@@ -10,7 +10,7 @@ public class ProductDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+
     private Long id;
 
     private String name;            // 제품 이름
@@ -21,16 +21,16 @@ public class ProductDetail extends BaseEntity {
 
     private Integer quantity;       // 수량
 
-    private Long imageId;           // 제품 이미지
+    private String imageUrl;           // 제품 이미지
 
     protected ProductDetail() {
     }
 
-    public ProductDetail(String name, String description, Integer price, Integer quantity, Long imageId) {
+    public ProductDetail(String name, String description, Integer price, Integer quantity, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
-        this.imageId = imageId;
+        this.imageUrl = imageUrl;
     }
 }

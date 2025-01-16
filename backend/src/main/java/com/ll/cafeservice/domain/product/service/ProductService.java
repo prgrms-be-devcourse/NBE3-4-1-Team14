@@ -6,8 +6,7 @@ import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
-import com.ll.cafeservice.domain.product.implement.ProductValidator;
-import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,8 +18,6 @@ public class ProductService {
 
     private final ProductManager productManager;
     private final ProductReader productReader;
-    private final ProductValidator productValidator;
-    private final ProductDetailRepository productDetailRepository;
 
     public ProductCreateResponse addProduct(final ProductCreateRequest request) {
 
@@ -29,10 +26,12 @@ public class ProductService {
                 request.name(),
                 request.price(),
                 request.description(),
-                request.quantity()
+                request.quantity(),
+                null
         );
 
         // 2. ProductManager 클래스에 새로움 품목을 저장하도록 요청
+
         Long savedProductId = productManager.addProduct(newProduct);
 
         // 3. 품목 저장에 대한 요청 반환
@@ -47,9 +46,11 @@ public class ProductService {
                             product.getId(),
                             product.getName(),
                             product.getPrice(),
-                            product.getDescription()
+                            product.getDescription(),
+                            product.getImageUrl()
                     );
                 })
                 .collect(Collectors.toList());
     }
 }
+//테스트코드 짜기, api완성.
