@@ -44,6 +44,8 @@ export interface Order {
   orderDate: string;
   items: OrderItem[];
   totalAmount: number;
+  address : string;
+  state : string;
 }
 
 export interface ClientPageProps {

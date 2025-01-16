@@ -65,7 +65,7 @@ export default function ProductItem({
               min="0"
               value={selectedCount}
               onChange={(e) => handleCountChange(Number(e.target.value))}
-              className="w-14 h-8 pl-2 pr-1 border border-gray-900 rounded text-center text-sm focus:outline-none focus:ring-1 focus:ring-gray-900 text-gray-900"
+              className="w-14 h-8 pl-2 pr-1 border border-gray-900 rounded text-center text-sm text-gray-900 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:opacity-100"
             />
           </div>
           <button

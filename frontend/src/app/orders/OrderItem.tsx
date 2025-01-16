@@ -1,5 +1,5 @@
 "use client";
-import { Order } from "./types";
+import { Order } from "../types";
 
 interface OrderItemProps {
   order: Order;
@@ -32,11 +32,14 @@ export default function OrderItem({ order }: OrderItemProps) {
             주문번호: {order.orderId}
           </p>
         </div>
+        <div className="mt-2">
+          <p className="text-sm text-gray-600">배송지: {order.address}</p>
+        </div>
       </div>
 
       <div className="p-4">
         <div className="space-y-3">
-          {order.items.map((item) => (
+          {order.items?.map((item) => (
             <div
               key={item.productId}
               className="flex justify-between items-center text-sm"
