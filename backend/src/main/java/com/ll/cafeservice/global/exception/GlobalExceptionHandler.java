@@ -18,5 +18,9 @@ public class GlobalExceptionHandler {
         return Result.error(403, "접근 권한이 없습니다.");
     }
 
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public Result<Empty> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return Result.error(400, e.getMessage());
+    }
 }

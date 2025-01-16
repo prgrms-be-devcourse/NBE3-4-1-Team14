@@ -1,5 +1,6 @@
 package com.ll.cafeservice.domain.product.implement;
 
+import com.ll.cafeservice.global.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,14 @@ public class ProductImageManager {
      * @return Product Image
      */
     public MultipartFile getProductImageByUrl(String url) {
+
+        // TODO : NULL 체크 + 유효한 파일이 있는지 체크
+        if(url == null) {
+            throw new ResourceNotFoundException("유효한 이미지 경로가 아닙니다.");
+        }
+
+
+
         return null;
     }
 }
