@@ -38,7 +38,6 @@ dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 yarn.lock
 .env
 .env.local
@@ -77,3 +76,7 @@ build/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# 예외 처리
+!package.json
+!package-lock.json
