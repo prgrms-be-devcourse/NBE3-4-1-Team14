@@ -13,6 +13,7 @@ public class Product {
     private final String name;            // 제품 이름
     private final String description;     // 제품 설명
     private final Integer price;           // 가격
+    private final Integer quantity;
     private final List<ProductImage> images; // 제품 이미지 목록
 
 

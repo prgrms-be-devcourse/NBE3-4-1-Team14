@@ -33,10 +33,10 @@ public class ProductService {
         );
 
         // 2. ProductManager 클래스에 새로움 품목을 저장하도록 요청
-        productManager.addProduct(newProduct);
+        Long savedProductId = productManager.addProduct(newProduct);
 
         // 3. 품목 저장에 대한 요청 반환
-        return new ProductCreateResponse(1L, "1");
+        return new ProductCreateResponse(savedProductId, "제품이 생성되었습니다.");
     }
 
 

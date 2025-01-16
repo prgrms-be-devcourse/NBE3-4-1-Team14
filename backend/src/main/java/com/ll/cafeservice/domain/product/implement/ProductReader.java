@@ -39,6 +39,7 @@ public class ProductReader {
                     productDetail.getName(),
                     productDetail.getDescription(),
                     productDetail.getPrice(),
+                    productDetail.getQuantity(),
                     productImages
             );
             products.add(product);
