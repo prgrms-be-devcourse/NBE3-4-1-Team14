@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -37,5 +41,7 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.WAITING;  // 기본값은 WAITING
 
+   @Column(name = "order_time", nullable = true)
+   private LocalDateTime orderDateTime = LocalDateTime.now();
     private double totalPrice;     // 총 가격
 }

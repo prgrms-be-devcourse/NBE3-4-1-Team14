@@ -27,8 +27,6 @@ public record OrderResponse (
         @NonNull
         String email,
 
-
-
         @Schema(description = "주문 품목")
         @NonNull
         List<OrderItem>items // 배송된 품목 리스트*/

@@ -42,8 +42,8 @@ public class OrderItem extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @Column(name = "order_time",nullable = false)
-    private LocalDateTime orderDateTime;
+//    @Column(name = "order_time", nullable = false)
+   // private LocalDateTime orderDateTime = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "product_id", nullable = false)

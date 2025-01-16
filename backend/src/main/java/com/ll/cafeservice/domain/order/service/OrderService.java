@@ -13,6 +13,7 @@ import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class OrderService {
         Order order = new Order();
         order.setEmail(request.email());
         order.setAddress(request.address());
+        order.setOrderDateTime(LocalDateTime.now());
         orderRepository.save(order);
 
         List<OrderItem>orderItems = createOrderItems(request,order);
@@ -69,6 +71,7 @@ public class OrderService {
             ProductDetail product = getProduct(itemRequest.productId());
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
             orderItems.add(orderItem);
+            orderItemRepository.save(orderItem);
         }
         return orderItems;
     }
@@ -82,7 +85,7 @@ public class OrderService {
 
     private ProductDetail getProduct(Long productId){
         Optional<ProductDetail> product = this.productDetailRepository.findById(productId);
-        return product.orElseThrow(()->new IllegalArgumentException("Error!"));
+        return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
     }
 
     // 주문 하루넘은거 처리하기 - status 변경하기 / delivery로 넘기기

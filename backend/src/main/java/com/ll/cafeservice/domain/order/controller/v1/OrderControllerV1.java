@@ -22,16 +22,16 @@ import java.util.List;
 public class OrderControllerV1 {
 
     private final OrderService orderService;
-    @PostMapping("/createOrder")
+    @PostMapping
     @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
     public Result<OrderResponse> order(@RequestBody @Valid OrderRequest request){
         log.info("주문 요청이 왔습니다.");
         return Result.success(orderService.order(request));
     }
 
-    @GetMapping("/getOrder")
+    @GetMapping
     @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<List<OrderResponse>>getOrder(@PathVariable String email){
+    public Result<List<OrderResponse>>getOrder(@RequestParam String email){
         log.info("주문확인요청이 왔습니다.");
         List<OrderResponse> orderResponse = orderService.getOrdersByEmail(email);
         return Result.success(orderResponse);
