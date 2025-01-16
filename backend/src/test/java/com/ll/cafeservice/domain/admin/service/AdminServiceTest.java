@@ -20,34 +20,28 @@ class AdminServiceTest {
     @Autowired
     private AdminRepository adminRepository;
 
-    private Admin admin;
     private BCryptPasswordEncoder encoder;
 
     @BeforeEach
     void setup() {
         adminRepository.deleteAll();
         encoder = new BCryptPasswordEncoder();
-        admin = Admin.builder()
-            .username("testAdmin")
-            .password("1234")
-            .build();
-        admin.encodePassword(encoder);
     }
 
     @Test
     @DisplayName("데이터 삽입 테스트")
     void testInsertAdminData() {
         Admin createdAdmin = adminService.createAdmin("testAdmin", "1234");
-        assertEquals(admin.getUsername(), createdAdmin.getUsername());
-        assertTrue(encoder.matches("1234", createdAdmin.getPassword()));
+        assertEquals("testAdmin", createdAdmin.getUsername());
+        assertTrue(createdAdmin.isPasswordValid(encoder, "1234"));
     }
 
     @Test
     @DisplayName("삽입된 데이터 검증 테스트")
     void testSavedAdminData() {
-        adminService.createAdmin("testAdmin", "1234");
+        adminService.createAdmin("testAdmin", "5678");
         Admin foundAdmin = (Admin) adminRepository.findByUsername("testAdmin").orElseThrow();
-        assertEquals(admin.getUsername(), foundAdmin.getUsername());
-        assertTrue(encoder.matches("1234", foundAdmin.getPassword()));
+        assertEquals("testAdmin", foundAdmin.getUsername());
+        assertTrue(foundAdmin.isPasswordValid(encoder, "5678"));
     }
 }
