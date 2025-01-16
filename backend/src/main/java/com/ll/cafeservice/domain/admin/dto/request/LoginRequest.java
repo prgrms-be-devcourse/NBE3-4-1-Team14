@@ -1,4 +1,4 @@
-package com.ll.cafeservice.domain.user.dto.request;
+package com.ll.cafeservice.domain.admin.dto.request;
 
 public record LoginRequest (
     String username,
