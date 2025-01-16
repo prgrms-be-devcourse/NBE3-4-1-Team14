@@ -1,14 +1,13 @@
-package com.ll.cafeservice.domain.user.controller.v1;
+package com.ll.cafeservice.domain.admin.controller.v1;
 
 import com.ll.cafeservice.api.Result;
-import com.ll.cafeservice.domain.user.dto.request.LoginRequest;
-import com.ll.cafeservice.domain.user.dto.response.LoginResponse;
+import com.ll.cafeservice.domain.admin.dto.request.LoginRequest;
+import com.ll.cafeservice.domain.admin.dto.response.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-public class UserControllerV1 {
+public class AdminControllerV1 {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "")
