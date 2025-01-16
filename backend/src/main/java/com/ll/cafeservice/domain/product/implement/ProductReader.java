@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +26,26 @@ public class ProductReader {
         List<ProductImage> images = productImageRepository.findAll();
 
         // Domain 객체로 변경 (변경 작업이 길면 ProductConverter? 와 같은 클래스로 뺄 수 있을 듯)
+        // Product 객체로 변환
         List<Product> products = new ArrayList<>();
+        for (ProductDetail productDetail : details) {
+            // ProductDetail에 맞는 Product 객체 생성
+            List<ProductImage> productImages = images.stream()
+                    .filter(image -> image.getProduct().getId().equals(productDetail.getId())) // ProductDetail의 ID와 비교
+                    .collect(Collectors.toList());
+
+            Product product = new Product(
+                    productDetail.getId(),
+                    productDetail.getName(),
+                    productDetail.getDescription(),
+                    productDetail.getPrice(),
+                    productDetail.getQuantity(),
+                    productImages
+            );
+            products.add(product);
+        }
+
+        // 3. 반환
         return products;
     }
 }
