@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     List<OrderItem>findByOrderId(Long orderId);
-    @Query("SELECT oi FROM OrderItem oi WHERE oi.orderId IN (SELECT o.id FROM Order o WHERE o.email = :email)")
+//@Query("SELECT oi FROM OrderItem oi WHERE oi.orderId IN (SELECT o.id FROM Order o WHERE o.email = :email)")
+    @Query("SELECT orderItem FROM OrderItem orderItem WHERE orderItem.order.email = :email")
     List<OrderItem> findByEmail(@Param("email") String email);
 }

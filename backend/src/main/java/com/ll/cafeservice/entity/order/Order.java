@@ -26,10 +26,9 @@ public class Order extends BaseEntity {
     @Column(name = "address", nullable = false)
     private String address;         // 배송 주소
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.COMPLETED;  // 기본값은 WAITING
 
-   @Column(name = "order_time", nullable = true)
-   private LocalDateTime orderDateTime = LocalDateTime.now();
     private double totalPrice;     // 총 가격
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
 }

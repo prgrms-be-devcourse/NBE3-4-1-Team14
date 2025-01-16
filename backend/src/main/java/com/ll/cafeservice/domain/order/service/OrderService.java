@@ -27,20 +27,20 @@ public class OrderService {
 
     public OrderResponse order(OrderRequest request){
         Order order = new Order();
+
         order.setEmail(request.email());
         order.setAddress(request.address());
-        order.setOrderDateTime(LocalDateTime.now());
-        OrderStatus orderStatus = alterOrderStatus(order);
-        order.setStatus(orderStatus);
         orderRepository.save(order);
 
         List<OrderItem>orderItems = createOrderItems(request,order);
+        order.setOrderItems(orderItems);
+
         double totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
-        orderRepository.save(order);
 
         return new OrderResponse(order.getId(),order.getEmail(),orderItems);
     }
+
 
     //email로 주문 목록 조회
     public List<OrderResponse>getOrdersByEmail(String email){
@@ -52,9 +52,10 @@ public class OrderService {
         }
         return response;
     }
-    public OrderStatus alterOrderStatus(Order order){
+
+    public OrderStatus alterOrderStatus(OrderItem orderItem){
         LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
-        if(order.getOrderDateTime().isBefore(standardTime)){
+        if(orderItem.getOrderDateTime().isBefore(standardTime)){
             return OrderStatus.COMPLETED;
         }else{
             return OrderStatus.WAITING;
@@ -63,15 +64,17 @@ public class OrderService {
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrderId(order.getId());
+        orderItem.setOrder(order);
         orderItem.setProduct(productDetail);
         orderItem.setQuantity(orderItemRequest.quantity());
         orderItem.calculateTotalPrice();
-        OrderStatus orderStatus = alterOrderStatus(order);
+        orderItem.setOrderDateTime(LocalDateTime.now());
+        OrderStatus orderStatus = alterOrderStatus(orderItem);
         orderItem.setStatus(orderStatus);
         return orderItem;
     }
-    //상품품목들생성
+
+    //상품품목들list에생성
     public List<OrderItem>createOrderItems(OrderRequest request,Order order){
         List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemRequest itemRequest : request.orderItems()){
@@ -89,7 +92,6 @@ public class OrderService {
         }
         return totalPrice;
     }
-
     private ProductDetail getProduct(Long productId){
         Optional<ProductDetail> product = this.productDetailRepository.findById(productId);
         return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));

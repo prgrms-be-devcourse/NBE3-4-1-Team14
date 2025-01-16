@@ -19,8 +19,8 @@ public class OrderItem extends BaseEntity {
     @Column(name = "orderItem_id")
     private Long id; // 주문항목 id
 
-    @Column(name = "order_id", nullable = false)
-    private Long orderId; // 주문한사람들 id
+   // @Column(name = "order_id", nullable = false)
+    //private Long orderId; // 주문한사람들 id
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -29,6 +29,14 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name= "product_id", nullable = false)
     private ProductDetail product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @Column(name = "order_time", nullable = true)
+    private LocalDateTime orderDateTime = LocalDateTime.now();
+
+    private double totalPrice;
     private int quantity; // 수량
 
     private double price; // 가격
