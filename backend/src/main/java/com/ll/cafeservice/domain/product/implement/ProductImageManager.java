@@ -2,24 +2,15 @@ package com.ll.cafeservice.domain.product.implement;
 
 import com.ll.cafeservice.global.exception.ImageStoreException;
 import com.ll.cafeservice.global.exception.ResourceNotFoundException;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 /**
@@ -52,6 +43,18 @@ public class ProductImageManager {
             return new UrlResource("file:" + getFullPath(filename));
         } catch (Exception e) {
             throw new ResourceNotFoundException("요청한 이미지가 존재하지 않습니다.");
+        }
+    }
+
+    public void deleteProductImageByFilename(String filename) {
+        if(filename == null || filename.isEmpty()){
+            return;
+        }
+
+        String fullPath = getFullPath(filename);
+        File file = new File(fullPath);
+        if(!file.delete()){
+            log.error("해당 파일이 존재하지 않거나, 실패했습니다. Filename : {}", filename);
         }
     }
 
