@@ -2,7 +2,11 @@ package com.ll.cafeservice.entity.order;
 
 import com.ll.cafeservice.entity.base.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
@@ -26,7 +30,12 @@ public class Order extends BaseEntity {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email; // 주문자 email
+
     @Column(name = "address", nullable = false)
     private String address;         // 배송 주소
-    private Integer totalPrice;     // 총 가격
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.WAITING;  // 기본값은 WAITING
+
+    private double totalPrice;     // 총 가격
 }

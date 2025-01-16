@@ -22,12 +22,28 @@ import java.util.List;
 public class OrderControllerV1 {
 
     private final OrderService orderService;
+    @PostMapping("/createOrder")
+    @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
+    public Result<OrderResponse> order(@RequestBody @Valid OrderRequest request){
+        log.info("주문 요청이 왔습니다.");
+        return Result.success(orderService.order(request));
+    }
 
+    @GetMapping("/getOrder")
+    @Operation(summary = "주문 확인", description = "주문 요청을 확인")
+    public Result<List<OrderResponse>>getOrder(@PathVariable String email){
+        log.info("주문확인요청이 왔습니다.");
+        List<OrderResponse> orderResponse = orderService.getOrdersByEmail(email);
+        return Result.success(orderResponse);
+    }
+
+
+/*
     /**
      *  주문요청 비즈니스 로직 처리후, 처리결과를 반환
      * @param request 주문요청 정보
      * @return 주문요청 결과
-     */
+
     @PostMapping
     @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
     public Result<OrderResponse> order(
@@ -36,12 +52,13 @@ public class OrderControllerV1 {
         log.info("주문 요청이 왔습니다.");
         return Result.success(orderService.order(request));
     }
-
+    */
+/*
     // 이메일에 해당하는 주문 내역을 확인한다.
     @GetMapping("/{email}")
     public Result<List<OrderResponse>> list(
             @PathVariable String email
     ){
         return Result.success(orderService.getList(email));
-    }
+    }*/
 }

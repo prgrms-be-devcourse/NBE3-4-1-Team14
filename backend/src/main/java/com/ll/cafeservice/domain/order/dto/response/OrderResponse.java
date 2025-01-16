@@ -1,6 +1,6 @@
 package com.ll.cafeservice.domain.order.dto.response;
 
-import com.ll.cafeservice.domain.order.OrderItem;
+import com.ll.cafeservice.entity.order.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.lang.NonNull;
 
@@ -28,5 +28,5 @@ public record OrderResponse (
 
         @Schema(description = "주문 품목")
         @NonNull
-                List<OrderItem>items // 배송된 품목 리스트*/
+        List<OrderItem>items // 배송된 품목 리스트*/
 ) {}
