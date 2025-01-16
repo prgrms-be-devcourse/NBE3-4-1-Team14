@@ -13,24 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 public class OrderItem extends BaseEntity {
-/*
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderItem_id")
-    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductDetail product;
-
-    private int quantity; // 수량
-
-    private double price; // 가격
-    */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderItem_id")
@@ -41,9 +24,6 @@ public class OrderItem extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-
-//    @Column(name = "order_time", nullable = false)
-   // private LocalDateTime orderDateTime = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "product_id", nullable = false)

@@ -4,10 +4,7 @@ import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.product.Product;
-import com.ll.cafeservice.entity.order.Order;
-import com.ll.cafeservice.entity.order.OrderItem;
-import com.ll.cafeservice.entity.order.OrderItemRepository;
-import com.ll.cafeservice.entity.order.OrderRepository;
+import com.ll.cafeservice.entity.order.*;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +30,8 @@ public class OrderService {
         order.setEmail(request.email());
         order.setAddress(request.address());
         order.setOrderDateTime(LocalDateTime.now());
+        OrderStatus orderStatus = alterOrderStatus(order);
+        order.setStatus(orderStatus);
         orderRepository.save(order);
 
         List<OrderItem>orderItems = createOrderItems(request,order);
@@ -53,7 +52,14 @@ public class OrderService {
         }
         return response;
     }
-
+    public OrderStatus alterOrderStatus(Order order){
+        LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
+        if(order.getOrderDateTime().isBefore(standardTime)){
+            return OrderStatus.COMPLETED;
+        }else{
+            return OrderStatus.WAITING;
+        }
+    }
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
         OrderItem orderItem = new OrderItem();
@@ -61,9 +67,10 @@ public class OrderService {
         orderItem.setProduct(productDetail);
         orderItem.setQuantity(orderItemRequest.quantity());
         orderItem.calculateTotalPrice();
+        OrderStatus orderStatus = alterOrderStatus(order);
+        orderItem.setStatus(orderStatus);
         return orderItem;
     }
-
     //상품품목들생성
     public List<OrderItem>createOrderItems(OrderRequest request,Order order){
         List<OrderItem> orderItems = new ArrayList<>();
@@ -88,18 +95,9 @@ public class OrderService {
         return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
     }
 
-    // 주문 하루넘은거 처리하기 - status 변경하기 / delivery로 넘기기
-
-
-    //private double calculateTotalPrice(List<OrderItemRequest>)
-    /*
-    public OrderResponse order(OrderRequest request) {
-        // TODO : 주문을 처리한다.
-
-        return new OrderResponse(1L, "주문 성공", List.of());
-    }
-
-    public List<OrderResponse> getList(String email) {
-        return List.of();
-    }*/
+    // 주문 하루넘은거 처리하기 - status 변경하기 /
+    // 주문 수정하기
+    // 주문 삭제하기
+    // 예외처리 : 해당 product 없을때 , 수량 부족할때
+    // 페이징
 }
