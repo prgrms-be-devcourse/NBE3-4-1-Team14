@@ -26,16 +26,13 @@ public class OrderService {
     private final ProductDetailRepository productDetailRepository;
     private final OrderItemRepository orderItemRepository;
 
-    // 주문처리
-    public Order createOrder(OrderRequest request){
+
+    public OrderResponse order(OrderRequest request){
         Order order = new Order();
         order.setEmail(request.email());
         order.setAddress(request.address());
-        return orderRepository.save(order);
-    }
+        orderRepository.save(order);
 
-    public OrderResponse order(OrderRequest request){
-        Order order = createOrder(request);
         List<OrderItem>orderItems = createOrderItems(request,order);
         double totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);

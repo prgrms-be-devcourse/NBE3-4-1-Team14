@@ -1,6 +1,7 @@
 package com.ll.cafeservice.domain.order.dto.response;
 
 import com.ll.cafeservice.entity.order.OrderItem;
+import com.ll.cafeservice.entity.order.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.lang.NonNull;
 
@@ -25,6 +26,8 @@ public record OrderResponse (
         @Schema(description = "주문자 이메일")
         @NonNull
         String email,
+
+
 
         @Schema(description = "주문 품목")
         @NonNull
