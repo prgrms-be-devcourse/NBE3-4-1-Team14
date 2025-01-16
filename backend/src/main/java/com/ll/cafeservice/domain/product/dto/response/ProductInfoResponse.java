@@ -1,5 +1,6 @@
 package com.ll.cafeservice.domain.product.dto.response;
 
+import lombok.Getter;
 import org.springframework.lang.NonNull;
 
 public record ProductInfoResponse (
@@ -14,5 +15,8 @@ public record ProductInfoResponse (
         Integer price,
 
         @NonNull
-        String description
+        String description,
+
+        @NonNull
+        String ImageUrl
 ){ }

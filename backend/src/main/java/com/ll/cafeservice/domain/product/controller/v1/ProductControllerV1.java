@@ -25,7 +25,7 @@ public class ProductControllerV1 {
     // 품목 추가
     @PostMapping
     public Result<ProductCreateResponse> createProduct(
-            @RequestBody ProductCreateRequest request
+            @ModelAttribute("request") ProductCreateRequest request
     ){
         return Result.success(productService.addProduct(request));
     }
@@ -33,7 +33,7 @@ public class ProductControllerV1 {
     // 품목 수정
     @PutMapping
     public Result<ProductUpdateRequest> updateProduct(
-            @RequestBody ProductUpdateRequest request
+            @ModelAttribute("request") ProductUpdateRequest request
     ){
         return Result.success(null);
     }
