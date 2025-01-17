@@ -93,8 +93,8 @@ public class ProductService {
         // 제품 조회
         Product existingProduct = productReader.findById(id);
 
-        // 제품 이미지 삭제
-        productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
+        // 25.01.17 - 주문 정보가 삭제가 아닌 비활성화가 됨에 따라, 삭제되던 기능도 주석처리
+        // productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
 
         // 제품 비활성화
         productManager.deactivateProduct(existingProduct);
