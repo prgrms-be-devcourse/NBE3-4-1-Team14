@@ -41,6 +41,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/*/admin/login").permitAll()
                 .requestMatchers("/api/*/admin/**").authenticated()
                 .anyRequest().permitAll()
+            )
+            .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+                UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint)
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
             );
         return http.build();
     }
