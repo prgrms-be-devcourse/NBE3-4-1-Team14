@@ -18,7 +18,8 @@ public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    //@Column(name = "order_id")
+    @Column
     private Long id; // 주문자 id
 
     @Column(name = "email", nullable = false, unique = true)

@@ -14,11 +14,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Table(name = "order_items")
 public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderItem_id")
+    //@Column(name = "orderItem_id")
+    @Column
     private Long id; // 주문항목 id
 
     @Enumerated(EnumType.STRING)
