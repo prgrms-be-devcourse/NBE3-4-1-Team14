@@ -3,6 +3,7 @@ package com.ll.cafeservice.domain.order.controller.v1;
 import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
+import com.ll.cafeservice.domain.order.dto.response.OrderDeleteResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,13 +37,11 @@ public class OrderControllerV1 {
         List<OrderResponse> orderResponse = orderService.getOrdersByEmail(email);
         return Result.success(orderResponse);
     }
-
-    //일단은 email로 삭제처리 한번에 다 삭제됨
     @DeleteMapping
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
-    public Result<String>deleteOrder(@RequestParam String email){
+    public Result<OrderDeleteResponse>deleteOrder(@RequestParam String email){
         log.info("주문삭제요청이 왔습니다.");
         orderService.deleteOrder(email);
-        return Result.success("주문취소완료");
+        return Result.success(new OrderDeleteResponse("주문이 성공적으로 취소되었습니다."));
     }
 }

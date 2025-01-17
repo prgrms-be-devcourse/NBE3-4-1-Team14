@@ -76,7 +76,6 @@ public class OrderService {
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
             order.addOrderItem(orderItem);
             orderItems.add(orderItem);
-            //orderItemRepository.save(orderItem);
         }
         return orderItems;
     }
@@ -91,6 +90,7 @@ public class OrderService {
             }
             orderRepository.save(order);
         }
+
     }
 
 
@@ -110,9 +110,8 @@ public class OrderService {
         LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
         if(orderItem.getOrderDateTime().isBefore(standardTime)){
             return OrderStatus.COMPLETED;
-        }else{
-            return OrderStatus.WAITING;
         }
+        return OrderStatus.WAITING;
     }
 
 }
