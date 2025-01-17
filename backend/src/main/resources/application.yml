@@ -24,6 +24,12 @@ spring:
         format_sql: true
         highlight_sql: true
         use_sql_comments: true
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+
+
 
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
@@ -38,3 +44,7 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
+
+image:
+  file:
+    path: src/main/resources/static/image/product/

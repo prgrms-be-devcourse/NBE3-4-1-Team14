@@ -2,6 +2,8 @@ package com.ll.cafeservice.global.exception;
 
 import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
+import com.ll.cafeservice.global.exception.image.ImageStoreException;
+import com.ll.cafeservice.global.exception.image.ImageResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,12 +19,10 @@ public class GlobalExceptionHandler {
     public Result<Empty> handleAccessDeniedException(AccessDeniedException e) {
         return Result.error(403, "접근 권한이 없습니다.");
     }
-
+  
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ProductNotFoundException.class)
     public Result<Empty> handleProductNotFoundException(ProductNotFoundException e){
         return Result.error(404, e.getMessage());
     }
-
-
 }
