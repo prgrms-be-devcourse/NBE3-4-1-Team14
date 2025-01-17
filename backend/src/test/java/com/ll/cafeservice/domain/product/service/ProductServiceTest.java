@@ -3,6 +3,7 @@ package com.ll.cafeservice.domain.product.service;
 import com.ll.cafeservice.domain.product.NewProduct;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.domain.product.dto.request.ProductCreateRequest;
+import com.ll.cafeservice.domain.product.dto.request.ProductUpdateRequest;
 import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+
 import java.util.List;
 
 
@@ -46,7 +48,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("addProduct 데이터 추가, 저장")
-    void addProductTest(){
+    void addProductTest() {
         //MockMultipartFile 생성 및 요청 데이터 정의
 
         ProductCreateRequest request = new ProductCreateRequest(
@@ -54,7 +56,8 @@ class ProductServiceTest {
                 4500,
                 "좋은커피",
                 100,
-                mockFile);
+                mockFile
+        );
         when(productManager.addProduct(any(NewProduct.class))).thenReturn(1L);
 
         ProductCreateResponse response = productService.addProduct(request);
@@ -66,21 +69,23 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("getList 품목 리스트 반환")
-    void getListTest(){
+    void getListTest() {
         Product product1 = new Product(
                 1L,
                 "커피",
                 "좋은커피",
                 4500,
                 100,
-        "img.jpg");
+                "img.jpg"
+        );
         Product product2 = new Product(
                 2L,
                 "커피2",
                 "좋은커피2",
                 5000,
                 50,
-                "img1.jpg");
+                "img1.jpg"
+        );
 
         //productReader.findAll()이 위의 데이터 반환
         when(productReader.findAll()).thenReturn(List.of(product1, product2));
@@ -104,6 +109,48 @@ class ProductServiceTest {
         assertThat(response.get(1).price()).isEqualTo(5000);
         assertThat(response.get(1).quantity()).isEqualTo(50);
         assertThat(response.get(1).imageUrl()).isEqualTo("img1.jpg");
+    }
+
+    @Test
+    @DisplayName("updatedProduct 제품 수정")
+    void updatedProductTest() {
+        //기존 데이터
+        Long productId = 1L;
+        Product existingProduct = new Product(
+                productId,
+                "커피",
+                "좋은커피",
+                4500,
+                100,
+                "img.jpg"
+        );
+        //수정 요청 데이터
+        ProductUpdateRequest updateRequest = new ProductUpdateRequest(
+                "커피123",
+                9999,
+                "좋은커피123",
+                99
+        );
+        //productReader.findById가 기존 product 반환
+        when(productReader.findById(productId)).thenReturn(existingProduct);
+
+        Product updatedProduct = new Product(
+                productId,
+                updateRequest.name(),
+                updateRequest.description(),
+                updateRequest.price(),
+                updateRequest.quantity(),
+                existingProduct.getImageUrl() //기존의 것 사용
+
+        );
+        assertThat(updatedProduct).isNotNull();
+        assertThat(updatedProduct.getId()).isEqualTo(productId);
+        assertThat(updatedProduct.getName()).isEqualTo("커피123");
+        assertThat(updatedProduct.getDescription()).isEqualTo("좋은커피123");
+        assertThat(updatedProduct.getPrice()).isEqualTo(9999);
+        assertThat(updatedProduct.getQuantity()).isEqualTo(99);
+        assertThat(updatedProduct.getImageUrl()).isEqualTo("img.jpg");
+
     }
 }
 
