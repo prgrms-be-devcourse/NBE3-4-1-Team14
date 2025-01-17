@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,8 @@ public class OrderControllerV1 {
     @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
     public Result<OrderResponse> order(@RequestBody @Valid OrderRequest request){
         log.info("주문 요청이 왔습니다.");
-        return Result.success(orderService.order(request));
+        OrderResponse orderResponse = orderService.order(request);
+        return Result.success(orderResponse);
     }
 
     @GetMapping
@@ -42,6 +44,7 @@ public class OrderControllerV1 {
     public Result<OrderDeleteResponse>deleteOrder(@RequestParam String email){
         log.info("주문삭제요청이 왔습니다.");
         orderService.deleteOrder(email);
-        return Result.success(new OrderDeleteResponse("주문이 성공적으로 취소되었습니다."));
+        OrderDeleteResponse orderResponse = new OrderDeleteResponse("주문이성공적으로 취소되었습니다.");
+        return Result.success(orderResponse);
     }
 }
