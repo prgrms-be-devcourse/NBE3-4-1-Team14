@@ -23,7 +23,7 @@ public class ProductManager {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
-                .imageUrl("")  // 이미지 URL이 없으므로 빈 문자열을 사용
+                .imageUrl("")
                 .build();
 
         ProductDetail savedProduct = productDetailRepository.save(productDetail);

@@ -16,4 +16,5 @@ public record ProductUpdateRequest(
 
         @NotEmpty
         Integer quantity
+
 ) { }
