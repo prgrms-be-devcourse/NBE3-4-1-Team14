@@ -24,13 +24,12 @@ public record OrderResponse (
         @NonNull
         List<OrderItem>items, // 주문한 품목 리스트
 
-        @Schema(description = "주문 비밀번호")
-        @NonNull
-        int pw,
-
         @Schema(description = "발급된 주문번호")
         UUID uuid,
 
         @Schema(description = "주문 시간")
-        LocalDateTime localDateTime
+        LocalDateTime localDateTime,
+
+        @Schema(description = "주문 총액")
+        double totalPrice
 ) {}

@@ -2,9 +2,12 @@ package com.ll.cafeservice.domain.order.controller.v1;
 
 import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
+import com.ll.cafeservice.domain.order.dto.request.OrderCheckRequest;
+import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
 import com.ll.cafeservice.domain.order.dto.response.OrderDeleteResponse;
+import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,24 +39,26 @@ public class OrderControllerV1 {
 
     @GetMapping
     @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<List<OrderResponse>>getOrder(@RequestParam UUID orderUuid){
+    public Result<List<OrderResponse>>getOrder(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
         log.info("주문확인요청이 왔습니다.");
-        List<OrderResponse> orderResponse = orderService.getOrdersByOrderUuid(orderUuid);
+        List<OrderResponse> orderResponse = orderService.getOrdersByOrderUuid(orderCheckRequest.orderUuid());
         return Result.success(orderResponse);
     }
+
     @DeleteMapping
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
-    public Result<OrderDeleteResponse>deleteOrder(@RequestParam UUID orderUuid){
+    public Result<OrderDeleteResponse>deleteOrder(@RequestBody @Valid OrderDeleteRequest orderDeleteRequest){
         log.info("주문삭제요청이 왔습니다.");
-        orderService.deleteOrder(orderUuid);
+        orderService.deleteOrder(orderDeleteRequest);
         OrderDeleteResponse orderResponse = new OrderDeleteResponse("주문이성공적으로 취소되었습니다.");
         return Result.success(orderResponse);
     }
-    /*
+
     @PutMapping
     @Operation(summary = "주문 수정",description = "주문을 수정합니다")
-    public Result<OrderResponse>modifyOrder(@RequestBody @Valid OrderModifyRequest orderModifyRequest){
+    public Result<OrderModifyResponse>modifyOrder(@RequestBody @Valid OrderModifyRequest orderModifyRequest){
         log.info("주문 수정요청이 왔습니다.");
-        return Result.success(orderService.order(orderModifyRequest));
-    }*/
+        OrderModifyResponse orderResponse = orderService.modifyOrder(orderModifyRequest);
+        return Result.success(orderResponse);
+    }
 }

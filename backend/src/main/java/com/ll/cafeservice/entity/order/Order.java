@@ -39,7 +39,7 @@ public class Order extends BaseEntity {
     private LocalDateTime orderDateTime = LocalDateTime.now();
 
 
-    //private double totalPrice;     // 총 가격
+    private double totalPrice;     // 총 가격
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

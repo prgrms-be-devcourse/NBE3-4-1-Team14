@@ -1,9 +1,11 @@
 package com.ll.cafeservice.domain.order.service;
 
 import com.ll.cafeservice.api.Result;
+import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
+import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.order.*;
@@ -43,26 +45,33 @@ public class OrderService {
         order.setOrderItems(orderItems);
 
         double totalPrice = calculateTotalPrice(orderItems);
-        //order.setTotalPrice(totalPrice);
+        order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getPw(),order.getOrderUuid(),order.getOrderDateTime());
+        //order.getId(),order.getEmail(),orderItems,order.getPw(),order.getOrderUuid(),order.getOrderDateTime(),
+        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getOrderDateTime(),order.getTotalPrice());
     }
-    /*
-    public OrderResponse modifyOrder(OrderModifyRequest modifyRequest){
-        List<Order>orders = orderRepository.findByEmail()
+
+    public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
+        Order order = orderRepository.findByOrderUuid(modifyRequest.orderUuid());
+        if(modifyRequest.pw()!=order.getPw()){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        order.setAddress(modifyRequest.address());
+        order.setOrderDateTime(LocalDateTime.now());
+        return new OrderModifyResponse("주소 변경 완료");
 
     }
-*/
+
     //Orderuuid로 주문 목록 조회
     public List<OrderResponse>getOrdersByOrderUuid(UUID orderUuid){
-        List<Order>orders= orderRepository.findByOrderUuid(orderUuid);
+        Order order = orderRepository.findByOrderUuid(orderUuid);
         List<OrderResponse>response = new ArrayList<>();
-        for(Order order : orders){
-            List<OrderItem>orderItems = orderItemRepository.findByOrderId(order.getId());
-            response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getPw(),order.getOrderUuid(),order.getOrderDateTime()));
-        }
+        List<OrderItem>orderItems = orderItemRepository.findByOrderId(order.getId());
+        response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getOrderDateTime(),order.getTotalPrice()));
+
         return response;
     }
+
 
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
@@ -87,18 +96,16 @@ public class OrderService {
         }
         return orderItems;
     }
-    public void deleteOrder(UUID orderUuid){
-        List<Order> orders = orderRepository.findByOrderUuid(orderUuid);
-        if(orders.isEmpty()){
-            throw new IllegalArgumentException("삭제 가능한 주문이 없습니다.");
+    public void deleteOrder(OrderDeleteRequest orderDeleteRequest){
+        Order order = orderRepository.findByOrderUuid(orderDeleteRequest.orderUuid());
+        if(orderDeleteRequest.pw()!=order.getPw()){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        for(Order order : orders){
-            for(OrderItem orderItem : order.getOrderItems()){
-                orderItem.setStatus(OrderStatus.CANCELED);
-            }
-            orderRepository.save(order);
-        }
+        for(OrderItem orderItem : order.getOrderItems()){
+            orderItem.setStatus(OrderStatus.CANCELED);
 
+        }
+        orderRepository.save(order);
     }
 
     private double calculateTotalPrice(List<OrderItem> orderItems){
