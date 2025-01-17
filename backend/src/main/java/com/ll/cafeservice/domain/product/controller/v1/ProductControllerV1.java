@@ -30,7 +30,8 @@ public class ProductControllerV1 {
     public Result<ProductCreateResponse> createProduct(
             @ModelAttribute("request") ProductCreateRequest request
     ){
-        return Result.success(productService.addProduct(request));
+        ProductCreateResponse response = productService.addProduct(request);
+        return Result.success(response);
     }
 
     // 품목 수정
@@ -49,7 +50,8 @@ public class ProductControllerV1 {
     @GetMapping("/list")
     public Result<List<ProductInfoResponse>> list(
     ){
-        return Result.success(productService.getList());
+        List<ProductInfoResponse> response = productService.getList();
+        return Result.success(response);
     }
 
     // 품목 삭제
@@ -58,7 +60,7 @@ public class ProductControllerV1 {
             @PathVariable Long id
     ){
         productService.deleteProduct(id);
-        ProductDeleteResponse productDeleteResponse = new ProductDeleteResponse(id, "d");
-        return Result.success(productDeleteResponse);
+        ProductDeleteResponse response = new ProductDeleteResponse(id, "d");
+        return Result.success(response);
     }
 }

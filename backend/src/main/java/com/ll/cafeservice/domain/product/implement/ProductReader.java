@@ -14,31 +14,31 @@ public class ProductReader {
     private final ProductDetailRepository productRepository;
 
     public List<Product> findAll() {
-
         return productRepository.findAll().stream()
-                .map(productDetail -> new Product(
-
-                        productDetail.getId(),
-                        productDetail.getName(),
-                        productDetail.getDescription(),
-                        productDetail.getPrice(),
-                        productDetail.getQuantity(),
-                        productDetail.getImageUrl()
-
-                ))
+                .map(productDetail -> Product.builder()
+                        .id(productDetail.getId())
+                        .name(productDetail.getName())
+                        .description(productDetail.getDescription())
+                        .price(productDetail.getPrice())
+                        .quantity(productDetail.getQuantity())
+                        .imageUrl(productDetail.getImageUrl())
+                        .build()
+                )
                 .collect(Collectors.toList());
     }
 
+
     public Product findById(Long id) {
         return productRepository.findById(id)
-                .map(productDetail -> new Product(
-                        productDetail.getId(),
-                        productDetail.getName(),
-                        productDetail.getDescription(),
-                        productDetail.getPrice(),
-                        productDetail.getQuantity(),
-                        productDetail.getImageUrl()
-                ))
-                .orElse(null); // Optional 안전 처리
+                .map(productDetail -> Product.builder()
+                        .id(productDetail.getId())
+                        .name(productDetail.getName())
+                        .description(productDetail.getDescription())
+                        .price(productDetail.getPrice())
+                        .quantity(productDetail.getQuantity())
+                        .imageUrl(productDetail.getImageUrl())
+                        .build()
+                )
+                .orElse(null);
     }
 }

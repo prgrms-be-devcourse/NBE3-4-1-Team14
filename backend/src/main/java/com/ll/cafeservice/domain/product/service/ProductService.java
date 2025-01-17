@@ -26,7 +26,7 @@ public class ProductService {
 
     public ProductCreateResponse addProduct(final ProductCreateRequest request) {
     log.info("{} {} {} {}", request.name(), request.price(), request.description(), request.quantity());
-        // 1. Request 정보를 이용하여 새로운 품목 (NewProduct 클래스)를 생성
+        //Request 정보를 이용하여 새로운 품목 (NewProduct 클래스)를 생성
         NewProduct newProduct = new NewProduct(
                 request.name(),
                 request.price(),
@@ -35,26 +35,25 @@ public class ProductService {
                 ""
         );
 
-        // 2. ProductManager 클래스에 새로움 품목을 저장하도록 요청
+        //ProductManager 클래스에 새로움 품목을 저장하도록 요청
 
         Long savedProductId = productManager.addProduct(newProduct);
 
-        // 3. 품목 저장에 대한 요청 반환
+        //품목 저장에 대한 요청 반환
         return new ProductCreateResponse(savedProductId, "제품이 생성되었습니다.");
     }
 
 
     public List<ProductInfoResponse> getList() {
         return productReader.findAll().stream()
-                .map(product -> {
-                    return new ProductInfoResponse(
-                            product.getId(),
-                            product.getName(),
-                            product.getPrice(),
-                            product.getDescription(),
-                            product.getImageUrl()
-                    );
-                })
+                .map(product -> ProductInfoResponse.builder() // 빌더 패턴 사용
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .description(product.getDescription())
+                        .imageUrl(product.getImageUrl())
+                        .build()
+                )
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +74,7 @@ public class ProductService {
         return new ProductUpdateResponse(id, "제품이 수정되었습니다");
     }
 
-    // 제품 삭제
+
     public ProductDeleteResponse deleteProduct(Long id) {
         // 제품 조회
         Product existingProduct = productReader.findById(id);

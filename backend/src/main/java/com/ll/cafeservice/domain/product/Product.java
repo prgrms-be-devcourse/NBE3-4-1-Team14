@@ -1,12 +1,14 @@
 package com.ll.cafeservice.domain.product;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 @Getter
+@Builder
 public class Product {
     private final Long id;                // 제품 ID
     private final String name;            // 제품 이름

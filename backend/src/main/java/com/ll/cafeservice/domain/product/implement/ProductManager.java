@@ -17,13 +17,15 @@ public class ProductManager {
     private final ProductDetailRepository productDetailRepository;
     //제품추가
     public long addProduct(NewProduct product) {
-        ProductDetail productDetail = new ProductDetail(
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getQuantity(),
-                ""
-        );
+
+        ProductDetail productDetail = ProductDetail.builder()
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .quantity(product.getQuantity())
+                .imageUrl("")  // 이미지 URL이 없으므로 빈 문자열을 사용
+                .build();
+
         ProductDetail savedProduct = productDetailRepository.save(productDetail);
 
         return savedProduct.getId();
