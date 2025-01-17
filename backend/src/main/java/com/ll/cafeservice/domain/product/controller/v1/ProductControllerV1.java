@@ -4,11 +4,14 @@ import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.product.dto.request.ProductCreateRequest;
 import com.ll.cafeservice.domain.product.dto.request.ProductUpdateRequest;
 import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
+import com.ll.cafeservice.domain.product.dto.response.ProductDeleteResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
+import com.ll.cafeservice.domain.product.dto.response.ProductUpdateResponse;
 import com.ll.cafeservice.domain.product.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,11 +34,14 @@ public class ProductControllerV1 {
     }
 
     // 품목 수정
-    @PutMapping
-    public Result<ProductUpdateRequest> updateProduct(
+    @PutMapping("/{id}")
+    public Result<ProductUpdateResponse> updateProduct(
+            @PathVariable Long id,
             @ModelAttribute("request") ProductUpdateRequest request
-    ){
-        return Result.success(null);
+    ) {
+        ProductUpdateResponse response = productService.updatedProduct(id, request);
+        return Result.success(response);
+
     }
 
     // 품목 리스트 반환
@@ -47,10 +53,12 @@ public class ProductControllerV1 {
     }
 
     // 품목 삭제
-    @DeleteMapping("/{itemId}")
-    public Result<Void> deleteProduct(
-            @PathVariable Long itemId
+    @DeleteMapping("/{id}")
+    public Result<ProductDeleteResponse> deleteProduct(
+            @PathVariable Long id
     ){
-        return Result.success(null);
+        productService.deleteProduct(id);
+        ProductDeleteResponse productDeleteResponse = new ProductDeleteResponse(id, "d");
+        return Result.success(productDeleteResponse);
     }
 }
