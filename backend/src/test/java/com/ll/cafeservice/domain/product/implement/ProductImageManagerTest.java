@@ -1,11 +1,10 @@
 package com.ll.cafeservice.domain.product.implement;
 
-import com.ll.cafeservice.domain.product.implement.ProductImageManager;
-import com.ll.cafeservice.global.exception.ImageStoreException;
-import com.ll.cafeservice.global.exception.ResourceNotFoundException;
+import com.ll.cafeservice.global.exception.image.ImageStoreException;
+import com.ll.cafeservice.global.exception.image.ImageResourceNotFoundException;
+import com.ll.cafeservice.global.exception.image.InvalidImageRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -54,13 +53,24 @@ class ProductImageManagerTest {
         @Test
         @DisplayName("null을 넘겨주며 저장을 요청하면 예외를 던진다")
         void t2() {
-            assertThrows(ResourceNotFoundException.class, ()
+            assertThrows(ImageResourceNotFoundException.class, ()
                     -> productImageManager.storeProductImage(null));
         }
 
         @Test
+        @DisplayName("서버에서 지정한 확장자가 아닌 경우, 예외가 발생한다.")
+        void t3() {
+            String originFilename = "test.abc";
+            when(multipartFile.isEmpty()).thenReturn(false);
+            when(multipartFile.getOriginalFilename()).thenReturn(originFilename);
+
+            assertThrows(InvalidImageRequestException.class,
+                    () -> productImageManager.storeProductImage(multipartFile));
+        }
+
+        @Test
         @DisplayName("파일 저장에 실패해도 예외를 던진다.")
-        void t3() throws IOException {
+        void t4() throws IOException {
 
             String originFilename = "test.png";
             when(multipartFile.isEmpty()).thenReturn(false);
@@ -132,10 +142,16 @@ class ProductImageManagerTest {
         }
 
         @Test
-        @DisplayName("null 파일명을 조회시 예외 발생")
+        @DisplayName("null, 빈문자열, 잘못된 확장자로 구성된 파일명을 조회시 예외 발생")
         void t2() {
-            assertThrows(NullPointerException.class,
+            assertThrows(InvalidImageRequestException.class,
                     () -> productImageManager.getProductImageByFilename(null));
+
+            assertThrows(InvalidImageRequestException.class,
+                    () -> productImageManager.getProductImageByFilename(""));
+
+            assertThrows(InvalidImageRequestException.class,
+                    () -> productImageManager.getProductImageByFilename("test.abcd"));
         }
     }
 
