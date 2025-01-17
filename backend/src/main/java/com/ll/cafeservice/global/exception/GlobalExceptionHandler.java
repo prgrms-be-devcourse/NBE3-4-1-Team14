@@ -18,5 +18,11 @@ public class GlobalExceptionHandler {
         return Result.error(403, "접근 권한이 없습니다.");
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ProductNotFoundException.class)
+    public Result<Empty> handleProductNotFoundException(ProductNotFoundException e){
+        return Result.error(404, e.getMessage());
+    }
+
 
 }

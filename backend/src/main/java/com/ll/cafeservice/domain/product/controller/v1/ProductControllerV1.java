@@ -60,7 +60,7 @@ public class ProductControllerV1 {
             @PathVariable Long id
     ){
         productService.deleteProduct(id);
-        ProductDeleteResponse response = new ProductDeleteResponse(id, "d");
+        ProductDeleteResponse response = productService.deleteProduct(id);
         return Result.success(response);
     }
 }

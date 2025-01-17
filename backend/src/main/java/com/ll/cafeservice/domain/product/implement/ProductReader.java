@@ -2,6 +2,7 @@ package com.ll.cafeservice.domain.product.implement;
 import com.ll.cafeservice.domain.product.NewProduct;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
+import com.ll.cafeservice.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -39,6 +40,6 @@ public class ProductReader {
                         .imageUrl(productDetail.getImageUrl())
                         .build()
                 )
-                .orElse(null);
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
