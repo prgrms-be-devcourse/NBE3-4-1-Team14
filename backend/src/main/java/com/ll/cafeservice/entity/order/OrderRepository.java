@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order,Long> {
     List<Order> findByEmail(String email);
-    // @Param("email")을 명시적으로 지정
 }

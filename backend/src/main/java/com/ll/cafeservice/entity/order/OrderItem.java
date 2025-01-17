@@ -21,9 +21,6 @@ public class OrderItem extends BaseEntity {
     @Column(name = "orderItem_id")
     private Long id; // 주문항목 id
 
-   // @Column(name = "order_id", nullable = false)
-    //private Long orderId; // 주문한사람들 id
-
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
