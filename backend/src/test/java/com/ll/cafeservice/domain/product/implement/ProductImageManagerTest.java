@@ -3,10 +3,7 @@ package com.ll.cafeservice.domain.product.implement;
 import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.global.exception.ImageStoreException;
 import com.ll.cafeservice.global.exception.ResourceNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -80,6 +77,24 @@ class ProductImageManagerTest {
         @Mock
         private File mockFile;
 
+        private String path = "src/main/resources/static/image/product/test.png";
+
+        @BeforeEach
+        void setUp() throws IOException {
+            File testFile = new File(path);
+            testFile.createNewFile();
+
+            assertNotNull(testFile);
+        }
+
+        @AfterEach
+        void tearDown() {
+            File testFile = new File(path);
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+        }
+
         @Test
         @DisplayName("정상적인 삭제 요청")
         void t1() throws IOException {
@@ -103,7 +118,7 @@ class ProductImageManagerTest {
     public class ImageLoadTest{
 
         @Test
-        @DisplayName("이미지를 요청 시, 존재하는 경우엔 Resource를, 없는 경우엔 예외를 발생시킨다.")
+        @DisplayName("이미지를 요청 시에 해당 이미지가 존재하는 경우엔 Resource를, 없는 경우엔 예외를 발생시킨다.")
         void t1() throws IOException {
             String filename = "test.png";
             Resource result = productImageManager.getProductImageByFilename(filename);
