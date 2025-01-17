@@ -1,7 +1,8 @@
 package com.ll.cafeservice.domain.product.implement;
 
-import com.ll.cafeservice.global.exception.ImageStoreException;
-import com.ll.cafeservice.global.exception.ResourceNotFoundException;
+import com.ll.cafeservice.global.exception.image.ImageStoreException;
+import com.ll.cafeservice.global.exception.image.ImageResourceNotFoundException;
+import com.ll.cafeservice.global.exception.image.InvalidImageRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -34,20 +35,26 @@ public class ProductImageManager {
 
     /**
      * URL 경로에 해당하는 파일을 반환합니다.
+     * filename 으로 null 이나 빈 문자열, 잘못된 확장자가 들어오는 경우는 Resource 탐색로직 전에 예외를 반환합니다.
+     * -> 불필요한 IO 바운드를 줄이기 위해 수정
      *
      * @param filename File name
      * @return Product Image Resource
      */
     public Resource getProductImageByFilename(String filename) {
+        if(filename == null || filename.isEmpty() || checkInvalidExt(filename)) {
+            throw new InvalidImageRequestException("filename is null or empty");
+        }
+
         try{
             return new UrlResource("file:" + getFullPath(filename));
         } catch (Exception e) {
-            throw new ResourceNotFoundException("요청한 이미지가 존재하지 않습니다.");
+            throw new ImageResourceNotFoundException("요청한 이미지가 존재하지 않습니다.");
         }
     }
 
     public void deleteProductImageByFilename(String filename) {
-        if(filename == null || filename.isEmpty()){
+        if(filename == null || filename.isEmpty() || checkInvalidExt(filename)){
             return;
         }
 
@@ -67,11 +74,15 @@ public class ProductImageManager {
     public String storeProductImage(MultipartFile multipartFile) {
         try {
             if (multipartFile == null || multipartFile.isEmpty()) {
-                throw new ResourceNotFoundException("파일이 비어있거나 유효하지 않습니다.");
+                throw new ImageResourceNotFoundException("파일이 비어있거나 유효하지 않습니다.");
             }
 
             String originalFilename = multipartFile.getOriginalFilename();
             String storeFileName = createStoreFileName(originalFilename);
+            if(checkInvalidExt(originalFilename)){
+                throw new InvalidImageRequestException("filename is null or empty");
+            }
+
             multipartFile.transferTo(new File(getFullPath(storeFileName)));
 
             return storeFileName;
@@ -93,5 +104,10 @@ public class ProductImageManager {
     private String extractExt(String originalFilename) {
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
+    }
+
+    private boolean checkInvalidExt(String originalFilename) {
+        String ext = extractExt(originalFilename);
+        return !ext.equals("png") && !ext.equals("jpg") && !ext.equals("jpeg");
     }
 }
