@@ -2,7 +2,10 @@ package com.ll.cafeservice.entity.product.product;
 
 import com.ll.cafeservice.entity.base.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.DynamicInsert;
+
 
 @Getter
 @Entity
@@ -10,6 +13,7 @@ public class ProductDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
 
     private Long id;
 
@@ -25,12 +29,18 @@ public class ProductDetail extends BaseEntity {
 
     protected ProductDetail() {
     }
-
+    @Builder
     public ProductDetail(String name, String description, Integer price, Integer quantity, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
+    }
+    public void update(String name, String description, Integer price, Integer quantity) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 }

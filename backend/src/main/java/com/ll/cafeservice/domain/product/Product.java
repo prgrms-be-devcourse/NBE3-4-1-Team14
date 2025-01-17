@@ -1,13 +1,14 @@
 package com.ll.cafeservice.domain.product;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
+
 @RequiredArgsConstructor
 @Getter
+@Builder
 public class Product {
     private final Long id;                // 제품 ID
     private final String name;            // 제품 이름
@@ -17,4 +18,16 @@ public class Product {
     private final String imageUrl; // 제품 이미지 목록
 
 
+    public Product updateProduct(String name, Integer price, String description, Integer quantity) {
+        return new Product(
+                this.id,
+                name,
+                description,
+                price,
+                quantity,
+                this.imageUrl
+        );
+    }
 }
+
+

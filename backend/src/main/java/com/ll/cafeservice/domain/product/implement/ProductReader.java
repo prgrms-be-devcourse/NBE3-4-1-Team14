@@ -1,6 +1,8 @@
 package com.ll.cafeservice.domain.product.implement;
+import com.ll.cafeservice.domain.product.NewProduct;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
+import com.ll.cafeservice.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -13,19 +15,31 @@ public class ProductReader {
     private final ProductDetailRepository productRepository;
 
     public List<Product> findAll() {
-
         return productRepository.findAll().stream()
-                .map(productDetail -> new Product(
-
-                        productDetail.getId(),
-                        productDetail.getName(),
-                        productDetail.getDescription(),
-                        productDetail.getPrice(),
-                        productDetail.getQuantity(),
-                        productDetail.getImageUrl()
-
-                ))
+                .map(productDetail -> Product.builder()
+                        .id(productDetail.getId())
+                        .name(productDetail.getName())
+                        .description(productDetail.getDescription())
+                        .price(productDetail.getPrice())
+                        .quantity(productDetail.getQuantity())
+                        .imageUrl(productDetail.getImageUrl())
+                        .build()
+                )
                 .collect(Collectors.toList());
     }
 
+
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+                .map(productDetail -> Product.builder()
+                        .id(productDetail.getId())
+                        .name(productDetail.getName())
+                        .description(productDetail.getDescription())
+                        .price(productDetail.getPrice())
+                        .quantity(productDetail.getQuantity())
+                        .imageUrl(productDetail.getImageUrl())
+                        .build()
+                )
+                .orElseThrow(() -> new ProductNotFoundException(id));
+    }
 }
