@@ -44,7 +44,7 @@ export function useOrder() {
     console.log('Sending order:', order); // 요청 데이터 확인
 
     try {
-      const response = await fetch('http://localhost:7070/api/v1/order', {
+      const response = await fetch('http://localhost:8080/api/v1/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,6 +59,9 @@ export function useOrder() {
       if (result.statusCode !== 200) {
         throw new Error(result.message);
       }
+
+      // TODO : response로 넘어오는 주문 번호를 alert 한다.
+
       return true;
     } catch (error) {
       console.error('주문 생성 중 오류 발생:', error);

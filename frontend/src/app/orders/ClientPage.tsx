@@ -11,12 +11,14 @@ interface OrderResponse {
 }
 
 export default function ClientPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [email, setEmail] = useState<string>("");
+  const [order, setOrder] = useState<Order>();
+
+  const [orderNumber, setOrderNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 폼 기본 동작 방지
-    const response = await fetch("http://localhost:7070/api/v1/order/" + email);
+    const response = await fetch("http://localhost:7070/api/v1/order/" + orderNumber);
     if (!response.ok) {
       console.log(response.status);
       return;
@@ -34,7 +36,7 @@ export default function ClientPage() {
       return;
     }
 
-    setOrders(responseBody.data);
+    setOrder(responseBody.data[0]);
   };
 
   return (
@@ -49,32 +51,38 @@ export default function ClientPage() {
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="flex gap-4">
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일을 입력하세요"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600"
-            required
+              type="text"
+              value={orderNumber}
+              onChange={(e) => setOrderNumber(e.target.value)}
+              placeholder="주문번호를 입력해주세요"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              required
+          />
+          <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="주문 비밀번호를 입력해주세요"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              required
           />
           <button
-            type="submit"
-            className="px-6 py-2 bg-gray-900 text-white text-white rounded-lg hover:bg-gray-600 transition-colors"
+              type="submit"
+              className="px-6 py-2 bg-gray-900 text-white text-white rounded-lg hover:bg-gray-600 transition-colors"
           >
             주문 조회
           </button>
         </div>
       </form>
 
-      {orders.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          주문 내역이 없거나 이메일을 입력해주세요.
-        </div>
+      {order ? (
+          <div className="space-y-6">
+            <OrderItem order={order}/>
+          </div>
       ) : (
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <OrderItem key={order.orderId} order={order} />
-          ))}
-        </div>
+          <div className="text-center py-12 text-gray-500">
+            주문 내역이 없거나 이메일을 입력해주세요.
+          </div>
       )}
     </div>
   );

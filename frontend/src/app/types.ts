@@ -4,7 +4,9 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-  description : string;
+  description: string;
+  filename: string;
+  imageUrl: string;
 }
 
 // 컴포넌트 Props 타입들
@@ -44,8 +46,8 @@ export interface Order {
   orderDate: string;
   items: OrderItem[];
   totalAmount: number;
-  address : string;
-  state : string;
+  address: string;
+  state: string;
 }
 
 export interface ClientPageProps {
@@ -57,7 +59,7 @@ export interface CartState {
   [key: number]: number;
 }
 
-export  interface CartContextType {
+export interface CartContextType {
   cartCounts: CartState;
   setCartCounts: React.Dispatch<React.SetStateAction<CartState>>;
   selectedCounts: CartState;

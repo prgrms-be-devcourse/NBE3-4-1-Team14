@@ -1,10 +1,19 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { ClientPageProps } from "../types";
 import ProductList from "./productList/ProductList";
 import { Cart } from "./cart/Cart";
+import { useProductStore } from "../store/useProductStore";
 
 export default function ClientPage({ products }: ClientPageProps) {
+  // products를 전역 상태에서 가져오기
+  const setProducts = useProductStore((state) => state.setProducts);
+
+  // 컴포넌트가 마운트될 때 store 초기화
+  useEffect(() => {
+    setProducts(products);
+  }, [products, setProducts]);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
       <header className="mb-6">

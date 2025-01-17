@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ProductItemProps } from "../../types";
 import { useCart } from "../../hooks/useCart";
 import { useFormatPrice } from "../../hooks/useFormatPrice";
@@ -27,9 +28,10 @@ export default function ProductItem({
   const handleProductClick = () => {
     // 상품 정보를 URL 파라미터로 전달
     router.push(
-      `/products/${product.id}?name=${encodeURIComponent(product.name)}&price=${
-        product.price
-      }&description=${encodeURIComponent(product.description)}`
+      `/products/${product.id}?
+      name=${encodeURIComponent(product.name)}&
+      price=${product.price}&
+      description=${encodeURIComponent(product.description)}&`
     );
   };
 
@@ -37,8 +39,18 @@ export default function ProductItem({
     <div className="relative overflow-hidden bg-white rounded-lg border border-gray-100">
       <div className="cursor-pointer" onClick={handleProductClick}>
         <div className="h-32 bg-gray-200 w-full">
-          <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
-            상품 이미지
+          <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm w-full">
+            {product.imageUrl && (
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                width={590} // h-32는 128px입니다
+                height={500}
+                placeholder="blur"
+                blurDataURL={product.imageUrl}
+                className="w-full h-full object-contain" // 컨테이너에 맞추면서 비율 유지
+              />
+            )}
           </div>
         </div>
 
