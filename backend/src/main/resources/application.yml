@@ -24,6 +24,7 @@ spring:
         format_sql: true
         highlight_sql: true
         use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQLDialect
 
 springdoc:
   default-produces-media-type: application/json;charset=UTF-8
