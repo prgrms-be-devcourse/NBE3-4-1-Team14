@@ -93,16 +93,19 @@ class ProductServiceTest {
 
         assertThat(response.get(0).id()).isEqualTo(1L);
         assertThat(response.get(0).name()).isEqualTo("커피");
+        assertThat(response.get(0).description()).isEqualTo("좋은커피");
         assertThat(response.get(0).price()).isEqualTo(4500);
+        assertThat(response.get(0).quantity()).isEqualTo(100);
+        assertThat(response.get(0).imageUrl()).isEqualTo("img.jpg");
 
         assertThat(response.get(1).id()).isEqualTo(2L);
         assertThat(response.get(1).name()).isEqualTo("커피2");
+        assertThat(response.get(1).description()).isEqualTo("좋은커피2");
         assertThat(response.get(1).price()).isEqualTo(5000);
+        assertThat(response.get(1).quantity()).isEqualTo(50);
+        assertThat(response.get(1).imageUrl()).isEqualTo("img1.jpg");
     }
 }
-
-
-//todo. getList 품목 리스트 반환
 
 //todo. updatedProduct 제품 수정
 

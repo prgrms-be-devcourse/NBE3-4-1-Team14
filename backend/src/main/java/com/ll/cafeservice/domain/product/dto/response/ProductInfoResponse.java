@@ -16,6 +16,9 @@ public record ProductInfoResponse (
         Integer price,
 
         @NonNull
+        Integer quantity,
+
+        @NonNull
         String description,
 
         @NonNull

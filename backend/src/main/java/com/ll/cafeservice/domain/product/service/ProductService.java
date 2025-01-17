@@ -50,6 +50,7 @@ public class ProductService {
                         .id(product.getId())
                         .name(product.getName())
                         .price(product.getPrice())
+                        .quantity(product.getQuantity())
                         .description(product.getDescription())
                         .imageUrl(product.getImageUrl())
                         .build()
