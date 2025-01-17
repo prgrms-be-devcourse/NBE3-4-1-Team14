@@ -32,10 +32,10 @@ class ProductServiceTest {
     void addProductTest(){
         //MockMultipartFile 생성 및 요청 데이터 정의
         MockMultipartFile mockFile = new MockMultipartFile(
-                "f",
-                "f",
-                "f",
-                "f".getBytes()
+                "file",
+                "coffee.jpg",
+                "image",
+                "Test".getBytes()
         );
         ProductCreateRequest request = new ProductCreateRequest(
                 "커피",
