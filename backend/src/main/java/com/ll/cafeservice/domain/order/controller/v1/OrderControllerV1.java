@@ -44,6 +44,7 @@ public class OrderControllerV1 {
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
     public Result<String>deleteOrder(@RequestParam String email){
         log.info("주문삭제요청이 왔습니다.");
+        orderService.deleteOrder(email);
         return Result.success("주문취소완료");
     }
 }

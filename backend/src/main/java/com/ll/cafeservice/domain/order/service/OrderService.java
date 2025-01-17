@@ -1,5 +1,6 @@
 package com.ll.cafeservice.domain.order.service;
 
+import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
@@ -114,9 +115,4 @@ public class OrderService {
         }
     }
 
-    // 주문 하루넘은거 처리하기 - status 변경하기 /
-    // 주문 수정하기
-    // 주문 삭제하기
-    // 예외처리 : 해당 product 없을때 , 수량 부족할때
-    // 페이징
 }
