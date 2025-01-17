@@ -43,7 +43,7 @@ public class ProductImageManager {
      */
     public Resource getProductImageByFilename(String filename) {
         if(filename == null || filename.isEmpty() || checkInvalidExt(filename)) {
-            throw new InvalidImageRequestException("filename is null or empty");
+            throw new InvalidImageRequestException("Invalid Type Filename");
         }
 
         try{
@@ -80,7 +80,7 @@ public class ProductImageManager {
             String originalFilename = multipartFile.getOriginalFilename();
             String storeFileName = createStoreFileName(originalFilename);
             if(checkInvalidExt(originalFilename)){
-                throw new InvalidImageRequestException("filename is null or empty");
+                throw new InvalidImageRequestException("File ext is invalid");
             }
 
             multipartFile.transferTo(new File(getFullPath(storeFileName)));
