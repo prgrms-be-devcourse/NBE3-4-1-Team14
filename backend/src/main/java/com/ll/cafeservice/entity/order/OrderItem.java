@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -35,8 +36,9 @@ public class OrderItem extends BaseEntity {
     @JsonBackReference
     private Order order;
 
-    @Column(name = "order_at")
-    private LocalDateTime orderDateTime = LocalDateTime.now();
+
+//    @Column(name = "order_at")
+//    private LocalDateTime orderDateTime = LocalDateTime.now();
 
     private int quantity; // 수량
 

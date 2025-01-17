@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,11 +23,20 @@ public class Order extends BaseEntity {
     @Column
     private Long id; // 주문자 id
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email; // 주문자 email
 
     @Column(name = "address", nullable = false)
     private String address;         // 배송 주소
+
+    @Column(name = "pw", nullable = false)
+    private int pw;
+
+    @Column(name="order_uuid")
+    private UUID orderUuid;
+
+    @Column(name = "order_at")
+    private LocalDateTime orderDateTime = LocalDateTime.now();
 
 
     //private double totalPrice;     // 총 가격

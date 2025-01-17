@@ -2,6 +2,7 @@ package com.ll.cafeservice.domain.order.service;
 
 import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
+import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.product.Product;
@@ -10,12 +11,14 @@ import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -33,24 +36,30 @@ public class OrderService {
 
         order.setEmail(request.email());
         order.setAddress(request.address());
-
+        order.setPw(request.pw());
+        order.setOrderDateTime(LocalDateTime.now());
+        order.setOrderUuid(UUID.randomUUID());
         List<OrderItem>orderItems = createOrderItems(request,order);
         order.setOrderItems(orderItems);
 
         double totalPrice = calculateTotalPrice(orderItems);
         //order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        return new OrderResponse(order.getId(),order.getEmail(),orderItems);
+        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getPw(),order.getOrderUuid(),order.getOrderDateTime());
     }
+    /*
+    public OrderResponse modifyOrder(OrderModifyRequest modifyRequest){
+        List<Order>orders = orderRepository.findByEmail()
 
-
+    }
+*/
     //email로 주문 목록 조회
     public List<OrderResponse>getOrdersByEmail(String email){
         List<Order>orders= orderRepository.findByEmail(email);
         List<OrderResponse>response = new ArrayList<>();
         for(Order order : orders){
             List<OrderItem>orderItems = orderItemRepository.findByOrderId(order.getId());
-            response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems));
+            response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getPw(),order.getOrderUuid(),order.getOrderDateTime()));
         }
         return response;
     }
@@ -62,8 +71,7 @@ public class OrderService {
         orderItem.setProduct(productDetail);
         orderItem.setQuantity(orderItemRequest.quantity());
         orderItem.calculateTotalPrice();
-        orderItem.setOrderDateTime(LocalDateTime.now());
-        OrderStatus orderStatus = alterOrderStatus(orderItem);
+        OrderStatus orderStatus = alterOrderStatus(order);
         orderItem.setStatus(orderStatus);
         return orderItem;
     }
@@ -93,7 +101,6 @@ public class OrderService {
 
     }
 
-
     private double calculateTotalPrice(List<OrderItem> orderItems){
         double totalPrice = 0;
         for(OrderItem orderItem : orderItems){
@@ -106,9 +113,9 @@ public class OrderService {
         return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
     }
 
-    public OrderStatus alterOrderStatus(OrderItem orderItem){
+    public OrderStatus alterOrderStatus(Order order){
         LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
-        if(orderItem.getOrderDateTime().isBefore(standardTime)){
+        if(order.getOrderDateTime().isBefore(standardTime)){
             return OrderStatus.COMPLETED;
         }
         return OrderStatus.WAITING;

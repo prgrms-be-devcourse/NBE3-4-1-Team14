@@ -3,9 +3,12 @@ package com.ll.cafeservice.domain.order.dto.response;
 import com.ll.cafeservice.entity.order.OrderItem;
 import com.ll.cafeservice.entity.order.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.cglib.core.Local;
 import org.springframework.lang.NonNull;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 public record OrderResponse (
@@ -19,6 +22,15 @@ public record OrderResponse (
 
         @Schema(description = "주문 품목")
         @NonNull
-        List<OrderItem>items // 배송된 품목 리스트*/
+        List<OrderItem>items, // 주문한 품목 리스트
 
+        @Schema(description = "주문 비밀번호")
+        @NonNull
+        int pw,
+
+        @Schema(description = "발급된 주문번호")
+        UUID uuid,
+
+        @Schema(description = "주문 시간")
+        LocalDateTime localDateTime
 ) {}
