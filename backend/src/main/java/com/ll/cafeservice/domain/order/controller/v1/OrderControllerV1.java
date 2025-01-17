@@ -16,6 +16,7 @@ import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "OrderControllerV1", description = "API 주문요청 컨트롤러")
 @Slf4j
@@ -35,16 +36,16 @@ public class OrderControllerV1 {
 
     @GetMapping
     @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<List<OrderResponse>>getOrder(@RequestParam String email){
+    public Result<List<OrderResponse>>getOrder(@RequestParam UUID orderUuid){
         log.info("주문확인요청이 왔습니다.");
-        List<OrderResponse> orderResponse = orderService.getOrdersByEmail(email);
+        List<OrderResponse> orderResponse = orderService.getOrdersByOrderUuid(orderUuid);
         return Result.success(orderResponse);
     }
     @DeleteMapping
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
-    public Result<OrderDeleteResponse>deleteOrder(@RequestParam String email){
+    public Result<OrderDeleteResponse>deleteOrder(@RequestParam UUID orderUuid){
         log.info("주문삭제요청이 왔습니다.");
-        orderService.deleteOrder(email);
+        orderService.deleteOrder(orderUuid);
         OrderDeleteResponse orderResponse = new OrderDeleteResponse("주문이성공적으로 취소되었습니다.");
         return Result.success(orderResponse);
     }

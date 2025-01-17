@@ -53,9 +53,9 @@ public class OrderService {
 
     }
 */
-    //email로 주문 목록 조회
-    public List<OrderResponse>getOrdersByEmail(String email){
-        List<Order>orders= orderRepository.findByEmail(email);
+    //Orderuuid로 주문 목록 조회
+    public List<OrderResponse>getOrdersByOrderUuid(UUID orderUuid){
+        List<Order>orders= orderRepository.findByOrderUuid(orderUuid);
         List<OrderResponse>response = new ArrayList<>();
         for(Order order : orders){
             List<OrderItem>orderItems = orderItemRepository.findByOrderId(order.getId());
@@ -87,8 +87,8 @@ public class OrderService {
         }
         return orderItems;
     }
-    public void deleteOrder(String email){
-        List<Order> orders = orderRepository.findByEmail(email);
+    public void deleteOrder(UUID orderUuid){
+        List<Order> orders = orderRepository.findByOrderUuid(orderUuid);
         if(orders.isEmpty()){
             throw new IllegalArgumentException("삭제 가능한 주문이 없습니다.");
         }
