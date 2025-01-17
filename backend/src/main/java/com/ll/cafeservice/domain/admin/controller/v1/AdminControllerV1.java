@@ -8,6 +8,7 @@ import com.ll.cafeservice.entity.admin.Admin;
 import com.ll.cafeservice.global.jwt.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +28,28 @@ public class AdminControllerV1 {
     private final AdminService adminService;
     private final JwtProvider jwtProvider;
 
+
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "관리자 로그인 API")
-    public Result<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+    public Result<LoginResponse> login(@RequestBody @Valid LoginRequest request,
+        HttpServletResponse response) {
         Admin admin = adminService.authenticate(request.username(), request.password());
         String token = jwtProvider.generateToken(admin.getUsername());
-        LoginResponse response = new LoginResponse(admin.getUsername(), token);
-        return Result.success(response);
+
+        // TODO : 현재 구현 진행하면서 직접 토큰값을 넘기면서 진행중인데 병합 이후에 쿠키를 통해 데이터를 교환할 예정
+//        Cookie cookie = new Cookie("access_key", token);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(false);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(60 * 60);
+//        response.addCookie(cookie);
+
+        LoginResponse loginResponse = new LoginResponse(admin.getUsername(), token);
+        return Result.success(loginResponse);
     }
 
     @GetMapping("/test")
-    public String test() {
+    public String main() {
         return "test";
     }
 }
