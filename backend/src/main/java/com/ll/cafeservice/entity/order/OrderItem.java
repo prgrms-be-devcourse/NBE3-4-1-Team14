@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,11 +20,11 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "order_items")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column
     private Long id; // 주문항목 id
 
