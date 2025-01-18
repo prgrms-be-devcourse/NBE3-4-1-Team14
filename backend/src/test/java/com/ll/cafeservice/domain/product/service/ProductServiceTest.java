@@ -6,6 +6,7 @@ import com.ll.cafeservice.domain.product.dto.request.ProductCreateRequest;
 import com.ll.cafeservice.domain.product.dto.request.ProductUpdateRequest;
 import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
+import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +33,13 @@ class ProductServiceTest {
     @Mock
     private ProductReader productReader;
 
+    @Mock
+    private ProductImageManager productImageManager;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this); //Mock 객체 초기화.
-        productService = new ProductService(productManager, productReader);
+        productService = new ProductService(productManager, productReader, productImageManager);
     }
 
     MockMultipartFile mockFile = new MockMultipartFile(
@@ -88,7 +92,7 @@ class ProductServiceTest {
         );
 
         //productReader.findAll()이 위의 데이터 반환
-        when(productReader.findAll()).thenReturn(List.of(product1, product2));
+        when(productReader.findAllActivateProduct()).thenReturn(List.of(product1, product2));
 
         List<ProductInfoResponse> response = productService.getList();
 
@@ -101,14 +105,14 @@ class ProductServiceTest {
         assertThat(response.get(0).description()).isEqualTo("좋은커피");
         assertThat(response.get(0).price()).isEqualTo(4500);
         assertThat(response.get(0).quantity()).isEqualTo(100);
-        assertThat(response.get(0).imageUrl()).isEqualTo("img.jpg");
+        assertThat(response.get(0).filename()).isEqualTo("img.jpg");
 
         assertThat(response.get(1).id()).isEqualTo(2L);
         assertThat(response.get(1).name()).isEqualTo("커피2");
         assertThat(response.get(1).description()).isEqualTo("좋은커피2");
         assertThat(response.get(1).price()).isEqualTo(5000);
         assertThat(response.get(1).quantity()).isEqualTo(50);
-        assertThat(response.get(1).imageUrl()).isEqualTo("img1.jpg");
+        assertThat(response.get(1).filename()).isEqualTo("img1.jpg");
     }
 
     @Test
@@ -129,7 +133,8 @@ class ProductServiceTest {
                 "커피123",
                 9999,
                 "좋은커피123",
-                99
+                99,
+                mockFile
         );
         //productReader.findById가 기존 product 반환
         when(productReader.findById(productId)).thenReturn(existingProduct);
@@ -140,7 +145,7 @@ class ProductServiceTest {
                 updateRequest.description(),
                 updateRequest.price(),
                 updateRequest.quantity(),
-                existingProduct.getImageUrl() //기존의 것 사용
+                existingProduct.getImgFilename() //기존의 것 사용
 
         );
         assertThat(updatedProduct).isNotNull();
@@ -149,7 +154,7 @@ class ProductServiceTest {
         assertThat(updatedProduct.getDescription()).isEqualTo("좋은커피123");
         assertThat(updatedProduct.getPrice()).isEqualTo(9999);
         assertThat(updatedProduct.getQuantity()).isEqualTo(99);
-        assertThat(updatedProduct.getImageUrl()).isEqualTo("img.jpg");
+        assertThat(updatedProduct.getImgFilename()).isEqualTo("img.jpg");
 
     }
 }
