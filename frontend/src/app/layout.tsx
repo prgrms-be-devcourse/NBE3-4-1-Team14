@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50`}
       >
-        <h1 className="text-center text-2xl font-bold py-6 bg-white shadow-sm text-gray-900">
+        <h1 id="main-header" className="text-center text-2xl font-bold py-6 bg-white shadow-sm text-gray-900">
           Grids & Circles
         </h1>
         <ClientLayout>{children}</ClientLayout>

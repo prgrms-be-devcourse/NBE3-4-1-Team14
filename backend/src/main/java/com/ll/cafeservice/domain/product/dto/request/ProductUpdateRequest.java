@@ -1,6 +1,7 @@
 package com.ll.cafeservice.domain.product.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public record ProductUpdateRequest(
@@ -15,5 +16,8 @@ public record ProductUpdateRequest(
         String description,
 
         @NotEmpty
-        Integer quantity
+        Integer quantity,
+
+        @NotEmpty
+        MultipartFile image
 ) { }

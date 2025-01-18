@@ -1,7 +1,9 @@
 package com.ll.cafeservice.domain.product.dto.response;
 
+import lombok.Builder;
 import org.springframework.lang.NonNull;
 
+@Builder
 public record ProductInfoResponse (
 
         @NonNull
@@ -14,5 +16,11 @@ public record ProductInfoResponse (
         Integer price,
 
         @NonNull
-        String description
+        Integer quantity,
+
+        @NonNull
+        String description,
+
+        @NonNull
+        String filename
 ){ }

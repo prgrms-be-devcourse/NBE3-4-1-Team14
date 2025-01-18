@@ -1,8 +1,15 @@
 package com.ll.cafeservice.domain.product;
 
-import java.time.LocalDateTime;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public class NewProduct {
-    String name;
-    Integer price;
+    private final String name;
+    private final Integer price;
+    private final String description;
+    private final Integer quantity;
+    private final String imgFilename;
 }
