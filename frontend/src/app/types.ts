@@ -35,19 +35,28 @@ export interface ProductItemProps {
 // 주문 관련 타입들
 export interface OrderItem {
   productId: number;
-  productName: string;
   quantity: number;
-  price: number;
-  totalPrice: number;
+}
+
+export interface OrderItemInfo{
+  id: number;
+  name : string;
+  price : number;
+  status : string;
+  description : string;
+  createdAt : Date;
+  quantity: number;
 }
 
 export interface Order {
   orderId: number;
-  orderDate: string;
-  items: OrderItem[];
-  totalAmount: number;
+  email: string;
+  items: OrderItemInfo[];
+  uuid: string;
+  orderStatus: string;
   address: string;
-  state: string;
+  totalPrice: number;
+  orderDate: string;
 }
 
 export interface ClientPageProps {

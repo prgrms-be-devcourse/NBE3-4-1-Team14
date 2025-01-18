@@ -4,8 +4,8 @@ import { Product, OrderItem } from '../types';
 
 interface OrderRequest{
   orderDate: string;
-  items: OrderItem[];
-  totalAmount: number;
+  orderItems: OrderItem[];
+  password: string;
   email: string;
   address : string;
 }
@@ -26,17 +26,14 @@ export function useOrder() {
       const product = products.find(p => p.id === Number(id));
       return {
         productId: Number(id),
-        productName: product?.name || '',
         quantity: count,
-        price: product?.price || 0,
-        totalPrice: (product?.price || 0) * count
       };
     });
 
     const order: OrderRequest = {
       orderDate: new Date().toISOString(),
-      items: orderItems,
-      totalAmount: orderItems.reduce((sum, item) => sum + item.totalPrice, 0),
+      orderItems: orderItems,
+      password : password,
       email : email,
       address : address
     };
@@ -61,6 +58,8 @@ export function useOrder() {
       }
 
       // TODO : response로 넘어오는 주문 번호를 alert 한다.
+      const responseData = result.data;
+      alert("주문번호 발급: " + responseData.uuid);
 
       return true;
     } catch (error) {
