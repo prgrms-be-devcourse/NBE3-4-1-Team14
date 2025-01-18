@@ -14,8 +14,8 @@ export function useOrder() {
   const router = useRouter();
   const { cartCounts, setCartCounts } = useCart();
 
-  const createOrder = async (products: Product[], email: string, address: string) => {
-    console.log('createOrder called with:', { products, email, address });
+  const createOrder = async (products: Product[], email: string, address: string, password: string) => {
+    console.log('createOrder called with:', { products, email, address, password });
 
     if (Object.keys(cartCounts).length === 0) {
       alert('상품을 담아주세요!');
@@ -70,18 +70,18 @@ export function useOrder() {
     }
   };
 
-  const handleCheckout = async (products: Product[], email : string, address : string) => {
+  const handleCheckout = async (products: Product[], email : string, address : string, password: string) => {
 
     // 디버깅을 위한 로그 추가
-    console.log('handleCheckout called with:', { products, email, address });
+    console.log('handleCheckout called with:', { products, email, address , password});
 
     // validation 추가
-    if (!email || !address) {
+    if (!email || !address || !password) {
       alert('이메일과 주소를 입력해주세요.');
       return;
     }
 
-    const success = await createOrder(products, email, address);
+    const success = await createOrder(products, email, address, password);
     if (success) {
       setCartCounts({});
       alert('주문이 완료되었습니다!');
