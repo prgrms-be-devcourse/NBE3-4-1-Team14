@@ -28,10 +28,9 @@ export default function ProductItem({
   const handleProductClick = () => {
     // 상품 정보를 URL 파라미터로 전달
     router.push(
-      `/products/${product.id}?
-      name=${encodeURIComponent(product.name)}&
-      price=${product.price}&
-      description=${encodeURIComponent(product.description)}&`
+      `/products/${product.id}?name=${encodeURIComponent(product.name)}&price=${
+        product.price
+      }&description=${encodeURIComponent(product.description)}`
     );
   };
 

@@ -119,9 +119,6 @@ export default function ProductDetailPage({
           </div>
 
           <div>
-            <h2 className="text-lg font-medium text-gray-900 mb-2">
-              상품 설명
-            </h2>
             <p className="text-gray-600 whitespace-pre-line">
               {product.description}
             </p>
