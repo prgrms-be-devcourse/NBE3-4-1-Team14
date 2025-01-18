@@ -12,6 +12,4 @@ public class NewProduct {
     private final String description;
     private final Integer quantity;
     private final String imgFilename;
-
-
 }
