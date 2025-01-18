@@ -8,10 +8,10 @@ import com.ll.cafeservice.domain.product.dto.response.ProductDeleteResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductUpdateResponse;
 import com.ll.cafeservice.domain.product.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +26,9 @@ public class ProductControllerV1 {
     private final ProductService productService;
 
     // 품목 추가
+    @Operation(
+            summary = "품목 추가",
+            description = "품목을 등록합니다. 등록 시에 이미지 파일은 .png를 권장드립니다.")
     @PostMapping
     public Result<ProductCreateResponse> createProduct(
             @ModelAttribute("request") ProductCreateRequest request
@@ -35,6 +38,9 @@ public class ProductControllerV1 {
     }
 
     // 품목 수정
+    @Operation(
+            summary = "품목 수정",
+            description = "품목을 수정합니다. 등록 시와 마찬가지의 데이터를 넘겨받습니다.")
     @PutMapping("/{id}")
     public Result<ProductUpdateResponse> updateProduct(
             @PathVariable Long id,
@@ -46,7 +52,9 @@ public class ProductControllerV1 {
     }
 
     // 품목 리스트 반환
-    // 필요 시, 페이징 기능을 넣어볼 수 있다.
+    @Operation(
+            summary = "품목 리스트 반환",
+            description = "품목의 리스트를 전달받습니다. 현재 활성화된 품목 전체를 반환합니다.")
     @GetMapping("/list")
     public Result<List<ProductInfoResponse>> list(
     ){
@@ -55,6 +63,9 @@ public class ProductControllerV1 {
     }
 
     // 품목 삭제
+    @Operation(
+            summary = "품목 삭제",
+            description = "품목을 삭제합니다. 실제로는 내부적으로 비활성화됩니다.")
     @DeleteMapping("/{id}")
     public Result<ProductDeleteResponse> deleteProduct(
             @PathVariable Long id
