@@ -1,4 +1,4 @@
-package com.ll.cafeservice.global.exception;
+package com.ll.cafeservice.security.exception;
 
 public class InvalidCredentialsException extends RuntimeException {
     public InvalidCredentialsException(String message) {

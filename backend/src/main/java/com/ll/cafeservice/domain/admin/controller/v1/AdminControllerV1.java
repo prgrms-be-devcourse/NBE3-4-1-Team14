@@ -5,7 +5,7 @@ import com.ll.cafeservice.domain.admin.dto.request.LoginRequest;
 import com.ll.cafeservice.domain.admin.dto.response.LoginResponse;
 import com.ll.cafeservice.domain.admin.service.AdminService;
 import com.ll.cafeservice.entity.admin.Admin;
-import com.ll.cafeservice.global.jwt.JwtProvider;
+import com.ll.cafeservice.security.jwt.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;

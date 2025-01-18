@@ -2,7 +2,7 @@ package com.ll.cafeservice.domain.admin.service;
 
 import com.ll.cafeservice.entity.admin.Admin;
 import com.ll.cafeservice.entity.admin.AdminRepository;
-import com.ll.cafeservice.global.exception.InvalidCredentialsException;
+import com.ll.cafeservice.security.exception.InvalidCredentialsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

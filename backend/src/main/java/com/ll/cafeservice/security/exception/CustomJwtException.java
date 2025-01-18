@@ -1,4 +1,4 @@
-package com.ll.cafeservice.global.exception;
+package com.ll.cafeservice.security.exception;
 
 public class CustomJwtException extends RuntimeException {
     public CustomJwtException(String message) {

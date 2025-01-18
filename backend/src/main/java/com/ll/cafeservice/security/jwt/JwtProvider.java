@@ -1,6 +1,6 @@
-package com.ll.cafeservice.global.jwt;
+package com.ll.cafeservice.security.jwt;
 
-import com.ll.cafeservice.global.exception.CustomJwtException;
+import com.ll.cafeservice.security.exception.CustomJwtException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
