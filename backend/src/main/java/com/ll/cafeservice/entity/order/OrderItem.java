@@ -35,7 +35,7 @@ public class OrderItem extends BaseEntity {
 
     private int quantity; // 수량
 
-    private double price; // 가격
+    private long price; // 가격
 
     public void calculateTotalPrice(){
         this.price = quantity*product.getPrice();

@@ -41,14 +41,15 @@ public class OrderService {
         order.setOrderDateTime(LocalDateTime.now());
         OrderStatus orderStatus = alterOrderStatus(order);
         order.setStatus(orderStatus);
+        order.setAddress(request.address());
         order.setOrderUuid(UUID.randomUUID());
         List<OrderItem>orderItems = createOrderItems(request,order);
         order.setOrderItems(orderItems);
 
-        double totalPrice = calculateTotalPrice(orderItems);
+        long totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getTotalPrice());
+        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice());
     }
 
     public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
@@ -66,18 +67,18 @@ public class OrderService {
     }
 
     //Orderuuid로 주문 목록 조회
-    public List<OrderResponse>getOrdersByOrderUuid(){
+    public List<OrderResponse>getOrders(){
         List<Order>orders = orderRepository.findAll();
         List<OrderResponse>response = new ArrayList<>();
         for(Order order : orders){
-            response.add(new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getTotalPrice()));
+            response.add(new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice()));
         }
         return response;
     }
 
     public OrderResponse getOrderByOrderUuid(UUID orderUuid){
         Order order = orderRepository.findByOrderUuid(orderUuid);
-        return new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getTotalPrice());
+        return new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice());
     }
 
     //상품품목하나에대한 생성
@@ -116,8 +117,8 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    private double calculateTotalPrice(List<OrderItem> orderItems){
-        double totalPrice = 0;
+    private long calculateTotalPrice(List<OrderItem> orderItems){
+        long totalPrice = 0;
         for(OrderItem orderItem : orderItems){
             totalPrice += orderItem.getPrice();
         }

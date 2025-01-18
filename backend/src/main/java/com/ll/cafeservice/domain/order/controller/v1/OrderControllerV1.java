@@ -37,14 +37,23 @@ public class OrderControllerV1 {
         return Result.success(orderResponse);
     }
 
+    // uuid로 단건조회
     @GetMapping
     @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<OrderResponse>getOrder(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
+    public Result<OrderResponse>getOrderbyUuid(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
         log.info("주문확인요청이 왔습니다.");
         OrderResponse orderResponse = orderService.getOrderByOrderUuid(orderCheckRequest.orderUuid());
         return Result.success(orderResponse);
     }
 
+    // 전체조회
+    @GetMapping("/list")
+    @Operation(summary = "관리자 전체 목록 확인")
+    public Result<List<OrderResponse>>getOrderList(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
+        log.info("관리자 페이지 주문리스트 확인 요청이 왔습니다.");
+        List<OrderResponse> orderResponse = orderService.getOrders();
+        return Result.success(orderResponse);
+    }
 
     @DeleteMapping
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")

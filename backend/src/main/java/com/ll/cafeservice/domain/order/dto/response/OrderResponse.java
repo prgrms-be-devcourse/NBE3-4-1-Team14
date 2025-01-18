@@ -30,6 +30,9 @@ public record OrderResponse (
         @Schema(description = "주문 상태")
         OrderStatus orderStatus,
 
+        @Schema(description = "주소")
+        String address,
+
         @Schema(description = "주문 총액")
-        double totalPrice
+        long totalPrice
 ) {}
