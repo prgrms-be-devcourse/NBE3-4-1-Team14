@@ -49,8 +49,4 @@ public class Result<T> {
             .message(message)
             .build();
     }
-
-    public String toJson() {
-        return String.format("{\"status\": %d, \"message\": \"%s\"}", statusCode, message);
-    }
 }
