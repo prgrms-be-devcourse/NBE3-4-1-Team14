@@ -4,6 +4,7 @@ import com.ll.cafeservice.domain.product.NewProduct;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
+import com.ll.cafeservice.entity.product.product.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,8 @@ public class ProductManager {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .quantity(product.getQuantity())
-                .imageUrl("")  // 이미지 URL이 없으므로 빈 문자열을 사용
+                .imgFilename(product.getImgFilename())
+                .status(ProductStatus.ACTIVE)
                 .build();
 
         ProductDetail savedProduct = productDetailRepository.save(productDetail);
@@ -32,6 +34,7 @@ public class ProductManager {
     }
     //제품수정
     public void updatedProduct(Product updatedProduct) {
+
         // 데이터베이스에서 기존 제품 조회
         ProductDetail productDetail = productDetailRepository.findById(updatedProduct.getId())
                 .orElseThrow(() -> new IllegalArgumentException("제품을 찾을 수 없습니다. ID: " + updatedProduct.getId()));
@@ -41,7 +44,8 @@ public class ProductManager {
                 updatedProduct.getName(),
                 updatedProduct.getDescription(),
                 updatedProduct.getPrice(),
-                updatedProduct.getQuantity()
+                updatedProduct.getQuantity(),
+                updatedProduct.getImgFilename()
         );
 
         // 변경된 내용 저장
@@ -49,12 +53,13 @@ public class ProductManager {
     }
 
     // 제품 삭제
-    public void deletedProduct(Product product) {
+    public void deactivateProduct(Product product) {
         // 제품이 존재하는지 확인
         ProductDetail productDetail = productDetailRepository.findById(product.getId())
                 .orElseThrow(() -> new IllegalArgumentException("제품을 찾을 수 없습니다. ID: " + product.getId()));
 
-        // 제품 삭제
-        productDetailRepository.delete(productDetail);
+        // 제품 활성화
+        productDetail.deactivate();
+        productDetailRepository.save(productDetail);
     }
 }

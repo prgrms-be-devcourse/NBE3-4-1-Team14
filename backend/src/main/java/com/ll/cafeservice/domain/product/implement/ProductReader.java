@@ -1,5 +1,4 @@
 package com.ll.cafeservice.domain.product.implement;
-import com.ll.cafeservice.domain.product.NewProduct;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import com.ll.cafeservice.global.exception.ProductNotFoundException;
@@ -14,20 +13,19 @@ public class ProductReader {
 
     private final ProductDetailRepository productRepository;
 
-    public List<Product> findAll() {
-        return productRepository.findAll().stream()
+    public List<Product> findAllActivateProduct() {
+        return productRepository.findAllActivateProduct().stream()
                 .map(productDetail -> Product.builder()
                         .id(productDetail.getId())
                         .name(productDetail.getName())
                         .description(productDetail.getDescription())
                         .price(productDetail.getPrice())
                         .quantity(productDetail.getQuantity())
-                        .imageUrl(productDetail.getImageUrl())
+                        .imgFilename(productDetail.getImgFilename())
                         .build()
                 )
                 .collect(Collectors.toList());
     }
-
 
     public Product findById(Long id) {
         return productRepository.findById(id)
@@ -37,7 +35,7 @@ public class ProductReader {
                         .description(productDetail.getDescription())
                         .price(productDetail.getPrice())
                         .quantity(productDetail.getQuantity())
-                        .imageUrl(productDetail.getImageUrl())
+                        .imgFilename(productDetail.getImgFilename())
                         .build()
                 )
                 .orElseThrow(() -> new ProductNotFoundException(id));

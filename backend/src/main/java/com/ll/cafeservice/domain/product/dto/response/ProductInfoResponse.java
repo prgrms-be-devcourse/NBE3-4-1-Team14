@@ -19,5 +19,5 @@ public record ProductInfoResponse (
         String description,
 
         @NonNull
-        String imageUrl
+        String filename
 ){ }
