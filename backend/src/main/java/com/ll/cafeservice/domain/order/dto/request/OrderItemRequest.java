@@ -14,10 +14,8 @@ public record OrderItemRequest (
 
         @Schema(description = "상품 개수")
     @NonNull
-    Integer quantity,
+    Integer quantity
 
-        @Schema(description = "상품 주문시간")
-    @NonNull
-    LocalDateTime orderDateTime
+
 
 ) { }

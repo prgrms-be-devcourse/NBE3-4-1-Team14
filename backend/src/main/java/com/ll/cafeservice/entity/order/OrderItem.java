@@ -24,8 +24,8 @@ public class OrderItem extends BaseEntity {
     @Column
     private Long id; // 주문항목 id
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    //@Enumerated(EnumType.STRING)
+    //private OrderStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "product_id", nullable = false)

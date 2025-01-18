@@ -27,8 +27,8 @@ public record OrderResponse (
         @Schema(description = "발급된 주문번호")
         UUID uuid,
 
-        @Schema(description = "주문 시간")
-        LocalDateTime localDateTime,
+        @Schema(description = "주문 상태")
+        OrderStatus orderStatus,
 
         @Schema(description = "주문 총액")
         double totalPrice

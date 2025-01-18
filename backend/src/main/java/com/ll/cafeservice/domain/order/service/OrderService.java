@@ -40,6 +40,8 @@ public class OrderService {
         order.setAddress(request.address());
         order.setPw(request.pw());
         order.setOrderDateTime(LocalDateTime.now());
+        OrderStatus orderStatus = alterOrderStatus(order);
+        order.setStatus(orderStatus);
         order.setOrderUuid(UUID.randomUUID());
         List<OrderItem>orderItems = createOrderItems(request,order);
         order.setOrderItems(orderItems);
@@ -47,8 +49,7 @@ public class OrderService {
         double totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        //order.getId(),order.getEmail(),orderItems,order.getPw(),order.getOrderUuid(),order.getOrderDateTime(),
-        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getOrderDateTime(),order.getTotalPrice());
+        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getTotalPrice());
     }
 
     public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
@@ -67,7 +68,7 @@ public class OrderService {
         Order order = orderRepository.findByOrderUuid(orderUuid);
         List<OrderResponse>response = new ArrayList<>();
         List<OrderItem>orderItems = orderItemRepository.findByOrderId(order.getId());
-        response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getOrderDateTime(),order.getTotalPrice()));
+        response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getTotalPrice()));
 
         return response;
     }
@@ -80,8 +81,8 @@ public class OrderService {
         orderItem.setProduct(productDetail);
         orderItem.setQuantity(orderItemRequest.quantity());
         orderItem.calculateTotalPrice();
-        OrderStatus orderStatus = alterOrderStatus(order);
-        orderItem.setStatus(orderStatus);
+        //OrderStatus orderStatus = alterOrderStatus(order);
+        //orderItem.setStatus(orderStatus);
         return orderItem;
     }
 
@@ -101,10 +102,7 @@ public class OrderService {
         if(orderDeleteRequest.pw()!=order.getPw()){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        for(OrderItem orderItem : order.getOrderItems()){
-            orderItem.setStatus(OrderStatus.CANCELED);
-
-        }
+        order.setStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
     }
 

@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record OrderModifyRequest(
-        @NotBlank(message = "이메일은 필수 입니다.")
-        String email,
 
         String address,
 

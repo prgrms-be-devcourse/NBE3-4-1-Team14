@@ -38,6 +38,8 @@ public class Order extends BaseEntity {
     @Column(name = "order_at")
     private LocalDateTime orderDateTime = LocalDateTime.now();
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private double totalPrice;     // 총 가격
 
