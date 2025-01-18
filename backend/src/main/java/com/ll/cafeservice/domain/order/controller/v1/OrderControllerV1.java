@@ -6,6 +6,7 @@ import com.ll.cafeservice.domain.order.dto.request.OrderCheckRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
+import com.ll.cafeservice.domain.order.dto.response.OrderCreateResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderDeleteResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
@@ -31,9 +32,9 @@ public class OrderControllerV1 {
     private final OrderService orderService;
     @PostMapping
     @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
-    public Result<OrderResponse> order(@RequestBody @Valid OrderRequest request){
+    public Result<OrderCreateResponse> order(@RequestBody @Valid OrderRequest request){
         log.info("주문 요청이 왔습니다.");
-        OrderResponse orderResponse = orderService.order(request);
+        OrderCreateResponse orderResponse = orderService.order(request);
         return Result.success(orderResponse);
     }
 

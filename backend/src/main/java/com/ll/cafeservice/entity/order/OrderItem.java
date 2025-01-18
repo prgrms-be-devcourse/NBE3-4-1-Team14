@@ -1,26 +1,18 @@
 package com.ll.cafeservice.entity.order;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import jakarta.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "order_items")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem extends BaseEntity {
 
     @Id

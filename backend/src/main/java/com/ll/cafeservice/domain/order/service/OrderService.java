@@ -4,6 +4,8 @@ import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
+import com.ll.cafeservice.domain.order.dto.response.OrderCreateResponse;
+import com.ll.cafeservice.domain.order.dto.response.OrderItemResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.order.exception.InSufficientStockException;
@@ -33,7 +35,7 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
 
 
-    public OrderResponse order(OrderRequest request){
+    public OrderCreateResponse order(OrderRequest request){
         Order order = new Order();
         order.setEmail(request.email());
         order.setAddress(request.address());
@@ -49,7 +51,7 @@ public class OrderService {
         long totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice());
+        return new OrderCreateResponse(order.getOrderUuid());
     }
 
     public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
@@ -71,14 +73,31 @@ public class OrderService {
         List<Order>orders = orderRepository.findAll();
         List<OrderResponse>response = new ArrayList<>();
         for(Order order : orders){
-            response.add(new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice()));
+            response.add(
+                    new OrderResponse(
+                            order.getId(),
+                            order.getEmail(),
+                            createOrderItemResponses(order.getOrderItems()),
+                            order.getOrderUuid(),
+                            order.getStatus(),
+                            order.getAddress(),
+                            order.getTotalPrice(),
+                            order.getOrderDateTime()));
         }
         return response;
     }
 
     public OrderResponse getOrderByOrderUuid(UUID orderUuid){
         Order order = orderRepository.findByOrderUuid(orderUuid);
-        return new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice());
+        return new OrderResponse(
+                order.getId(),
+                order.getEmail(),
+                createOrderItemResponses(order.getOrderItems()),
+                order.getOrderUuid(),
+                order.getStatus(),
+                order.getAddress(),
+                order.getTotalPrice(),
+                order.getOrderDateTime());
     }
 
     //상품품목하나에대한 생성
@@ -137,4 +156,17 @@ public class OrderService {
         return OrderStatus.WAITING;
     }
 
+    private List<OrderItemResponse> createOrderItemResponses(List<OrderItem> orderItems){
+        List<OrderItemResponse>orderItemResponses = new ArrayList<>();
+        for(OrderItem orderItem : orderItems){
+            orderItemResponses.add(
+                    new OrderItemResponse(
+                            orderItem.getProduct().getName(),
+                            orderItem.getQuantity(),
+                            orderItem.getPrice()
+                    )
+            );
+        }
+        return orderItemResponses;
+    }
 }
