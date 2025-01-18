@@ -34,7 +34,6 @@ public class OrderService {
     private final ProductDetailRepository productDetailRepository;
     private final OrderItemRepository orderItemRepository;
 
-
     public OrderCreateResponse order(OrderRequest request){
         Order order = new Order();
         order.setEmail(request.email());
@@ -139,7 +138,7 @@ public class OrderService {
     private long calculateTotalPrice(List<OrderItem> orderItems){
         long totalPrice = 0;
         for(OrderItem orderItem : orderItems){
-            totalPrice += orderItem.getPrice();
+            totalPrice += (orderItem.getPrice() * orderItem.getQuantity());
         }
         return totalPrice;
     }
