@@ -1,19 +1,19 @@
 package com.ll.cafeservice.domain.order.service;
 
-import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
 import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
-import com.ll.cafeservice.domain.product.Product;
+import com.ll.cafeservice.domain.order.exception.InSufficientStockException;
+import com.ll.cafeservice.domain.order.exception.OrderClosedException;
+import com.ll.cafeservice.domain.order.exception.PwMismatchException;
 import com.ll.cafeservice.entity.order.*;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +35,6 @@ public class OrderService {
 
     public OrderResponse order(OrderRequest request){
         Order order = new Order();
-
         order.setEmail(request.email());
         order.setAddress(request.address());
         order.setPw(request.pw());
@@ -54,8 +53,11 @@ public class OrderService {
 
     public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
         Order order = orderRepository.findByOrderUuid(modifyRequest.orderUuid());
+        if(order.getStatus()!=OrderStatus.WAITING){
+            throw new OrderClosedException("이미 처리가 완료된 주문입니다.");
+        }
         if(modifyRequest.pw()!=order.getPw()){
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PwMismatchException("비밀번호가 일치하지 않습니다.");
         }
         order.setAddress(modifyRequest.address());
         order.setOrderDateTime(LocalDateTime.now());
@@ -64,15 +66,19 @@ public class OrderService {
     }
 
     //Orderuuid로 주문 목록 조회
-    public List<OrderResponse>getOrdersByOrderUuid(UUID orderUuid){
-        Order order = orderRepository.findByOrderUuid(orderUuid);
+    public List<OrderResponse>getOrdersByOrderUuid(){
+        List<Order>orders = orderRepository.findAll();
         List<OrderResponse>response = new ArrayList<>();
-        List<OrderItem>orderItems = orderItemRepository.findByOrderId(order.getId());
-        response.add(new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getTotalPrice()));
-
+        for(Order order : orders){
+            response.add(new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getTotalPrice()));
+        }
         return response;
     }
 
+    public OrderResponse getOrderByOrderUuid(UUID orderUuid){
+        Order order = orderRepository.findByOrderUuid(orderUuid);
+        return new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getTotalPrice());
+    }
 
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
@@ -81,8 +87,6 @@ public class OrderService {
         orderItem.setProduct(productDetail);
         orderItem.setQuantity(orderItemRequest.quantity());
         orderItem.calculateTotalPrice();
-        //OrderStatus orderStatus = alterOrderStatus(order);
-        //orderItem.setStatus(orderStatus);
         return orderItem;
     }
 
@@ -91,6 +95,9 @@ public class OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemRequest itemRequest : request.orderItems()){
             ProductDetail product = getProduct(itemRequest.productId());
+            if(product.getQuantity()<itemRequest.quantity()){
+                throw new InSufficientStockException("재고가 부족합니다.");
+            }
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
             order.addOrderItem(orderItem);
             orderItems.add(orderItem);
@@ -99,8 +106,11 @@ public class OrderService {
     }
     public void deleteOrder(OrderDeleteRequest orderDeleteRequest){
         Order order = orderRepository.findByOrderUuid(orderDeleteRequest.orderUuid());
+        if(order.getStatus()!=OrderStatus.WAITING){
+            throw new OrderClosedException("이미 처리가 완료된 주문입니다.");
+        }
         if(orderDeleteRequest.pw()!=order.getPw()){
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PwMismatchException("비밀번호가 일치하지 않습니다.");
         }
         order.setStatus(OrderStatus.CANCELED);
         orderRepository.save(order);

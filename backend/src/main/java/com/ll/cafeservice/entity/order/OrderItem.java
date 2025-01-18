@@ -20,12 +20,9 @@ public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "orderItem_id")
+
     @Column
     private Long id; // 주문항목 id
-
-    //@Enumerated(EnumType.STRING)
-    //private OrderStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "product_id", nullable = false)

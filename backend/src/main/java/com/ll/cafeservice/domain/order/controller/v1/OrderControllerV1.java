@@ -39,11 +39,12 @@ public class OrderControllerV1 {
 
     @GetMapping
     @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<List<OrderResponse>>getOrder(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
+    public Result<OrderResponse>getOrder(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
         log.info("주문확인요청이 왔습니다.");
-        List<OrderResponse> orderResponse = orderService.getOrdersByOrderUuid(orderCheckRequest.orderUuid());
+        OrderResponse orderResponse = orderService.getOrderByOrderUuid(orderCheckRequest.orderUuid());
         return Result.success(orderResponse);
     }
+
 
     @DeleteMapping
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")

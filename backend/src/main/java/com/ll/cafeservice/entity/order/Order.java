@@ -52,6 +52,6 @@ public class Order extends BaseEntity {
             orderItems = new ArrayList<>();
         }
         orderItems.add(orderItem);
-        orderItem.setOrder(this); // 양방향 연관관계 설정
+        orderItem.setOrder(this);
     }
 }
