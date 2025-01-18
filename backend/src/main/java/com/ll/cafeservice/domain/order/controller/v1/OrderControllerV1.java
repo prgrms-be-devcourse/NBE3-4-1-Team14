@@ -39,10 +39,11 @@ public class OrderControllerV1 {
 
     // uuid로 단건조회
     @GetMapping
-    @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<OrderResponse>getOrderbyUuid(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
+    public Result<OrderResponse> getOrderbyUuid(
+            @RequestParam UUID orderUuid,
+            @RequestParam String password) {
         log.info("주문확인요청이 왔습니다.");
-        OrderResponse orderResponse = orderService.getOrderByOrderUuid(orderCheckRequest.orderUuid());
+        OrderResponse orderResponse = orderService.getOrderByOrderUuid(orderUuid);
         return Result.success(orderResponse);
     }
 
