@@ -1,7 +1,11 @@
 package com.ll.cafeservice.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 @Data
@@ -20,22 +24,29 @@ public class Result<T> {
     private String message;
 
     @Schema(description = "반환 데이터")
-    @NonNull
     private T data;
 
     public static <T> Result<T> success(final T data) {
         return createResult(200, "Success", data);
     }
 
-    public static Result<Empty> error(final int statusCode, final String message) {
-        return createResult(statusCode, message, new Empty());
+    public static <T> Result<T> error(final int statusCode, final String message) {
+        return createResult(statusCode, message);
     }
 
-    public static <T> Result<T> createResult(final int statusCode, final String message, final T data) {
+    public static <T> Result<T> createResult(final int statusCode, final String message,
+        final T data) {
         return Result.<T>builder()
-                .statusCode(statusCode)
-                .message(message)
-                .data(data)
-                .build();
+            .statusCode(statusCode)
+            .message(message)
+            .data(data)
+            .build();
+    }
+
+    public static <T> Result<T> createResult(final int statusCode, final String message) {
+        return Result.<T>builder()
+            .statusCode(statusCode)
+            .message(message)
+            .build();
     }
 }

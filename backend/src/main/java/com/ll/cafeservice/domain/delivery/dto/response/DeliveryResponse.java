@@ -1,6 +1,6 @@
 package com.ll.cafeservice.domain.delivery.dto.response;
 
-import com.ll.cafeservice.domain.order.OrderItem;
+import com.ll.cafeservice.entity.order.OrderItem;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
