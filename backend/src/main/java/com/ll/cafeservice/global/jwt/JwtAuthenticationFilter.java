@@ -35,10 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
+            throw new CustomJwtException("토큰값이 존재하지 않습니다.");
         } catch (CustomJwtException ex) {
-            request.setAttribute("Exception", ex);
+            request.setAttribute("JwtException", ex);
         }
-        filterChain.doFilter(request, response); // 예외가 없을 경우에만 필터 체인 진행
+        filterChain.doFilter(request, response);
     }
 
 

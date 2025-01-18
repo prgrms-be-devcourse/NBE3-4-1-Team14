@@ -2,8 +2,8 @@ package com.ll.cafeservice.global.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -19,9 +19,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     }
 
     @Override
-    public void commence(@NonNull HttpServletRequest request,
-        @NonNull HttpServletResponse response,
-        @NonNull AuthenticationException authException) {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         Exception exception = (Exception) request.getAttribute("JwtException");
         if (exception != null) {
             resolver.resolveException(request, response, null, exception); // JwtException 위임
