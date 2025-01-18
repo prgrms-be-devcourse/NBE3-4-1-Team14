@@ -1,8 +1,8 @@
 package com.ll.cafeservice.domain.admin.dto.response;
 
-import org.springframework.lang.NonNull;
+public record LoginResponse(
+    String username,
+    String token
+) {
 
-public record LoginResponse (
-    @NonNull
-    String username
-){ }
+}
