@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidCredentialsException.class)
     public Result<Empty> handleInvalidCredentialsException(InvalidCredentialsException ex) {
-        return Result.error(401, "로그인 정보가 올바르지 않습니다.");
+        return Result.error(401, ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
