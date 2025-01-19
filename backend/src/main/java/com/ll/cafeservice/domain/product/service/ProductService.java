@@ -28,10 +28,9 @@ public class ProductService {
     private final ProductImageManager productImageManager;
     private final ProductMapper productMapper;
 
-    private Product getExistingProduct(Long id) {
+    private Product getExistingProduct(Long id) { //조회 메서드
         return productReader.findById(id);
     }
-
 
     public ProductCreateResponse addProduct(final ProductCreateRequest request) {
 
@@ -89,15 +88,11 @@ public class ProductService {
 
 
     public ProductDeleteResponse deleteProduct(Long id) {
-
-        // 제품 조회
-        Product existingProduct = getExistingProduct(id);
-
         // 25.01.17 - 주문 정보가 삭제가 아닌 비활성화가 됨에 따라, 삭제되던 기능도 주석처리
         // productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
 
         // 제품 비활성화
-        productManager.deactivateProduct(existingProduct);
+        productManager.deactivateProduct(getExistingProduct(id));
 
         // 삭제 완료 응답
         return new ProductDeleteResponse(id, ResponseMessages.PRODUCT_DELETED);
