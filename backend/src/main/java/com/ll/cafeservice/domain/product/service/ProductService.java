@@ -4,10 +4,7 @@ import com.ll.cafeservice.domain.product.NewProduct;
 import com.ll.cafeservice.domain.product.Product;
 import com.ll.cafeservice.domain.product.dto.request.ProductCreateRequest;
 import com.ll.cafeservice.domain.product.dto.request.ProductUpdateRequest;
-import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
-import com.ll.cafeservice.domain.product.dto.response.ProductDeleteResponse;
-import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
-import com.ll.cafeservice.domain.product.dto.response.ProductUpdateResponse;
+import com.ll.cafeservice.domain.product.dto.response.*;
 import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
@@ -33,6 +30,7 @@ public class ProductService {
         return productReader.findById(id);
     }
 
+
     public ProductCreateResponse addProduct(final ProductCreateRequest request) {
 
         // log.info("{} {} {} {}", request.name(), request.price(), request.description(), request.quantity());
@@ -53,7 +51,7 @@ public class ProductService {
         Long savedProductId = productManager.addProduct(newProduct);
 
         //품목 저장에 대한 요청 반환
-        return new ProductCreateResponse(savedProductId, "제품이 생성되었습니다.");
+        return new ProductCreateResponse(savedProductId, ResponseMessages.PRODUCT_CREATED);
     }
 
 
@@ -92,7 +90,7 @@ public class ProductService {
         //수정된 제품 저장
         productManager.updatedProduct(updatedProduct);
 
-        return new ProductUpdateResponse(id, "제품이 수정되었습니다");
+        return new ProductUpdateResponse(id, ResponseMessages.PRODUCT_UPDATED);
     }
 
 
@@ -108,6 +106,6 @@ public class ProductService {
         productManager.deactivateProduct(existingProduct);
 
         // 삭제 완료 응답
-        return new ProductDeleteResponse(id, "제품이 삭제되었습니다.");
+        return new ProductDeleteResponse(id, ResponseMessages.PRODUCT_DELETED);
     }
 }
