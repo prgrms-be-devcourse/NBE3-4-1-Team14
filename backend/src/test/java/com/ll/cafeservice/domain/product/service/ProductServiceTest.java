@@ -9,6 +9,7 @@ import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
 import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
+import com.ll.cafeservice.domain.product.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,10 +37,13 @@ class ProductServiceTest {
     @Mock
     private ProductImageManager productImageManager;
 
+    @Mock
+    private ProductMapper productMapper;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this); //Mock 객체 초기화.
-        productService = new ProductService(productManager, productReader, productImageManager);
+        productService = new ProductService(productManager, productReader, productImageManager, productMapper);
     }
 
     MockMultipartFile mockFile = new MockMultipartFile(
