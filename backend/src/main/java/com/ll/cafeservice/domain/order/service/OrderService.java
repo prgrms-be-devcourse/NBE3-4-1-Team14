@@ -109,14 +109,13 @@ public class OrderService {
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
             order.addOrderItem(orderItem);
             orderItems.add(orderItem);
-
+            product.updateQuantity(itemRequest.quantity());
         }
         return orderItems;
     }
 
     private void updateProductQuantity(ProductDetail product, int orderedQuantity){
         int newQuantity = product.getQuantity() - orderedQuantity;
-
     }
     public void deleteOrder(OrderDeleteRequest orderDeleteRequest){
         Order order = orderRepository.findByOrderUuid(orderDeleteRequest.orderUuid());
@@ -142,13 +141,6 @@ public class OrderService {
         return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
     }
 
-    public OrderStatus alterOrderStatus(Order order){
-        LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
-        if(order.getOrderDateTime().isBefore(standardTime)){
-            return OrderStatus.COMPLETED;
-        }
-        return OrderStatus.WAITING;
-    }
 
     private List<OrderItemResponse> createOrderItemResponses(List<OrderItem> orderItems){
         List<OrderItemResponse>orderItemResponses = new ArrayList<>();

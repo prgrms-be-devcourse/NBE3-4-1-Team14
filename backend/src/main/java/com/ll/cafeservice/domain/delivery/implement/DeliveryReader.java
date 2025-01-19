@@ -1,3 +1,4 @@
+/*
 package com.ll.cafeservice.domain.delivery.implement;
 
 import com.ll.cafeservice.domain.delivery.Delivery;
@@ -20,3 +21,4 @@ public class DeliveryReader {
                 }).toList();
     }
 }
+*/
