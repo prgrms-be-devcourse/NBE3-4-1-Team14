@@ -15,12 +15,23 @@ interface OrderSearchRequest {
   orderUuid: string;
 }
 
+interface OrderModifyRequest {
+  address: string;
+  pw: number;
+  orderUuid: string;
+}
+
+interface OrderCancelReqeust {
+  pw: number;
+  orderUuid: string;
+}
+
 export default function ClientPage() {
   const [order, setOrder] = useState<Order>();
   const [orderNumber, setOrderNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [showEmailForm, setShowEmailForm] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
+  const [showEmailForm, setShowAddressForm] = useState(false);
+  const [newAddress, setNewAddress] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,40 +69,43 @@ export default function ClientPage() {
     setOrder(responseBody.data);
   };
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
+  const handleAddressSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newEmail || isUpdating || !order) return;
+    if (!newAddress || isUpdating || !order) return;
 
     setIsUpdating(true);
+
+    const request: OrderModifyRequest = {
+      address: newAddress,
+      pw: parseInt(password),
+      orderUuid: orderNumber,
+    };
+
+    console.log(request);
+
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/v1/order/${order.orderId}/email`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: newEmail,
-            password: password,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:8080/api/v1/order`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      });
 
       const responseBody = await response.json();
 
       if (responseBody.statusCode === 200) {
-        alert("이메일이 성공적으로 업데이트되었습니다.");
-        setShowEmailForm(false);
-        setNewEmail("");
+        alert("배송주소가 성공적으로 업데이트되었습니다.");
+        setShowAddressForm(false);
+        setNewAddress("");
         // 주문 정보 새로고침
         handleSubmit(new Event("submit") as any);
       } else {
-        alert(responseBody.message || "이메일 업데이트에 실패했습니다.");
+        alert(responseBody.message || "배송주소 업데이트에 실패했습니다.");
       }
     } catch (error) {
-      console.error("이메일 업데이트 중 오류:", error);
-      alert("이메일 업데이트 중 오류가 발생했습니다.");
+      console.error("배송주소 업데이트 중 오류:", error);
+      alert("배송주소 업데이트 중 오류가 발생했습니다.");
     } finally {
       setIsUpdating(false);
     }
@@ -101,17 +115,19 @@ export default function ClientPage() {
     if (!order) return;
     if (!confirm("주문을 취소하시겠습니까?")) return;
 
+    const request: OrderCancelReqeust = {
+      pw: parseInt(password),
+      orderUuid: orderNumber,
+    };
+
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/v1/order/${order.orderId}/cancel`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ password: password }),
-        }
-      );
+      const response = await fetch(`http://localhost:8080/api/v1/order`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      });
 
       const responseBody = await response.json();
 
@@ -191,7 +207,7 @@ export default function ClientPage() {
             {order.orderStatus === "WAITING" && (
               <div className="space-x-3">
                 <button
-                  onClick={() => setShowEmailForm(true)}
+                  onClick={() => setShowAddressForm(true)}
                   className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                 >
                   수정
@@ -206,33 +222,33 @@ export default function ClientPage() {
             )}
           </div>
 
-          {/* 이메일 수정 폼 */}
+          {/* 배송주소 수정 폼 */}
           {showEmailForm && (
             <div className="mb-4 border border-gray-100 rounded-lg shadow-sm">
               <div className="px-4 py-3 border-b border-gray-100">
                 <h3 className="text-sm font-medium text-gray-900">
-                  이메일 주소 수정
+                  배송주소 수정
                 </h3>
               </div>
-              <form onSubmit={handleEmailSubmit} className="p-4">
+              <form onSubmit={handleAddressSubmit} className="p-4">
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-gray-600 mb-1">
-                      새 이메일 주소
+                      배송주소
                     </label>
                     <input
-                      type="email"
-                      value={newEmail}
-                      onChange={(e) => setNewEmail(e.target.value)}
+                      type="text"
+                      value={newAddress}
+                      onChange={(e) => setNewAddress(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600"
-                      placeholder="새 이메일 주소를 입력해주세요"
+                      placeholder="새 배송주소를 입력해주세요"
                       required
                     />
                   </div>
                   <div className="flex justify-end gap-3">
                     <button
                       type="button"
-                      onClick={() => setShowEmailForm(false)}
+                      onClick={() => setShowAddressForm(false)}
                       className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
                     >
                       취소
