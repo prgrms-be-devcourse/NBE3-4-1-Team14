@@ -5,7 +5,7 @@ import { Product, OrderItem } from '../types';
 interface OrderRequest{
   orderDate: string;
   orderItems: OrderItem[];
-  password: string;
+  pw: string;
   email: string;
   address : string;
 }
@@ -33,7 +33,7 @@ export function useOrder() {
     const order: OrderRequest = {
       orderDate: new Date().toISOString(),
       orderItems: orderItems,
-      password : password,
+      pw : password,
       email : email,
       address : address
     };
