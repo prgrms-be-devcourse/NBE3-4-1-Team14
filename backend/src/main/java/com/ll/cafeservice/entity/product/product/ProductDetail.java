@@ -36,4 +36,7 @@ public class ProductDetail extends BaseEntity {
         this.status = ProductStatus.INACTIVE;
     }
 
+    public void updateQuantity(int orderedQuantity){
+        this.quantity -= orderedQuantity;
+    }
 }
