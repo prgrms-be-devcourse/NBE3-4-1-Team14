@@ -4,14 +4,13 @@ import com.ll.cafeservice.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+@Setter
 @Getter
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductDetail extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,4 +35,5 @@ public class ProductDetail extends BaseEntity {
     public void deactivate(){
         this.status = ProductStatus.INACTIVE;
     }
+
 }
