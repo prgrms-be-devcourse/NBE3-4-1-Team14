@@ -12,11 +12,14 @@ import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
 
+import com.ll.cafeservice.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,10 @@ public class ProductService {
     private final ProductManager productManager;
     private final ProductReader productReader;
     private final ProductImageManager productImageManager;
+
+    private Product getExistingProduct(Long id) {
+        return productReader.findById(id);
+    }
 
     public ProductCreateResponse addProduct(final ProductCreateRequest request) {
 
@@ -67,19 +74,19 @@ public class ProductService {
     public ProductUpdateResponse updateProduct(Long id, ProductUpdateRequest request) {
 
         //제품 데이터 조회
-        Product existingProduct = productReader.findById(id);
+        Product existingProduct = getExistingProduct(id);
 
         // 기존 이미지 삭제 및 새로운 이미지 저장
         productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
         String newImageFilename = productImageManager.storeProductImage(request.image());
 
         //요청 데이터를 이용하여 기존 제품 정보 수정
-       Product updatedProduct = existingProduct.updateProduct(
+        Product updatedProduct = existingProduct.updateProduct(
                 request.name(),
                 request.price(),
                 request.description(),
                 request.quantity(),
-               newImageFilename
+                newImageFilename
         );
 
         //수정된 제품 저장
@@ -92,7 +99,7 @@ public class ProductService {
     public ProductDeleteResponse deleteProduct(Long id) {
 
         // 제품 조회
-        Product existingProduct = productReader.findById(id);
+        Product existingProduct = getExistingProduct(id);
 
         // 25.01.17 - 주문 정보가 삭제가 아닌 비활성화가 됨에 따라, 삭제되던 기능도 주석처리
         // productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
