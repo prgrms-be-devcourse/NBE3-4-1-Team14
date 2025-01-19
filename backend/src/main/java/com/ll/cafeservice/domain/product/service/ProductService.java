@@ -9,6 +9,7 @@ import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
 
+import com.ll.cafeservice.domain.product.mapper.ProductMapper;
 import com.ll.cafeservice.global.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class ProductService {
     private final ProductManager productManager;
     private final ProductReader productReader;
     private final ProductImageManager productImageManager;
+    private final ProductMapper productMapper;
 
     private Product getExistingProduct(Long id) {
         return productReader.findById(id);
@@ -57,15 +59,7 @@ public class ProductService {
 
     public List<ProductInfoResponse> getList() {
         return productReader.findAllActivateProduct().stream()
-                .map(product -> ProductInfoResponse.builder() // 빌더 패턴 사용
-                        .id(product.getId())
-                        .name(product.getName())
-                        .price(product.getPrice())
-                        .quantity(product.getQuantity())
-                        .description(product.getDescription())
-                        .filename(product.getImgFilename())
-                        .build()
-                )
+                .map(productMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
