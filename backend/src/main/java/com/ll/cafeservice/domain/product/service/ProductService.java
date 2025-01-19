@@ -64,7 +64,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductUpdateResponse updatedProduct(Long id, ProductUpdateRequest request) {
+    public ProductUpdateResponse updateProduct(Long id, ProductUpdateRequest request) {
 
         //제품 데이터 조회
         Product existingProduct = productReader.findById(id);
