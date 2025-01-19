@@ -35,15 +35,7 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
 
     public OrderCreateResponse order(OrderRequest request){
-        Order order = new Order();
-        order.setEmail(request.email());
-        order.setAddress(request.address());
-        order.setPw(request.pw());
-        order.setOrderDateTime(LocalDateTime.now());
-        OrderStatus orderStatus = alterOrderStatus(order);
-        order.setStatus(orderStatus);
-        order.setAddress(request.address());
-        order.setOrderUuid(UUID.randomUUID());
+        Order order = Order.builder().email(request.email()).address(request.address()).pw(request.pw()).orderDateTime(LocalDateTime.now()).status(OrderStatus.WAITING).orderUuid(UUID.randomUUID()).build();
         List<OrderItem>orderItems = createOrderItems(request,order);
         order.setOrderItems(orderItems);
 
@@ -120,8 +112,14 @@ public class OrderService {
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
             order.addOrderItem(orderItem);
             orderItems.add(orderItem);
+
         }
         return orderItems;
+    }
+
+    private void updateProductQuantity(ProductDetail product, int orderedQuantity){
+        int newQuantity = product.getQuantity() - orderedQuantity;
+
     }
     public void deleteOrder(OrderDeleteRequest orderDeleteRequest){
         Order order = orderRepository.findByOrderUuid(orderDeleteRequest.orderUuid());
