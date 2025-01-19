@@ -93,10 +93,7 @@ public class OrderService {
 
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(order);
-        orderItem.setProduct(productDetail);
-        orderItem.setQuantity(orderItemRequest.quantity());
+        OrderItem orderItem = OrderItem.builder().order(order).product(productDetail).quantity(orderItemRequest.quantity()).build();
         orderItem.calculateTotalPrice();
         return orderItem;
     }
