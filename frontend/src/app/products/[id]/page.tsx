@@ -1,14 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../hooks/useCart";
 import { useFormatPrice } from "../../hooks/useFormatPrice";
 import { use } from "react";
+import { useProductStore } from "../../store/useProductStore";
 
 interface SearchParams {
   name: string;
   price: string;
   description: string;
+  imageUrl: string;
 }
 
 export default function ProductDetailPage({
@@ -21,6 +24,10 @@ export default function ProductDetailPage({
   const resolvedParams = use(params);
   const resolvedSearchParams = use(searchParams);
 
+  // store에서 상품 정보 가져오기
+  const getProduct = useProductStore((state) => state.getProduct);
+  const storeProduct = getProduct(Number(resolvedParams.id));
+
   const router = useRouter();
   const { selectedCounts, setSelectedCounts, setCartCounts } = useCart();
   const formatPrice = useFormatPrice();
@@ -30,6 +37,7 @@ export default function ProductDetailPage({
     name: resolvedSearchParams.name,
     price: Number(resolvedSearchParams.price),
     description: resolvedSearchParams.description,
+    imageUrl: storeProduct?.imageUrl, // 이미지 URL은 store에서 가져옴
   };
 
   const selectedCount = selectedCounts[product.id] || 0;
@@ -61,6 +69,11 @@ export default function ProductDetailPage({
     router.back();
   };
 
+  // store에서 상품을 찾지 못한 경우
+  if (!storeProduct) {
+    return <div>상품을 찾을 수 없습니다.</div>;
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 bg-white">
       <button
@@ -84,10 +97,19 @@ export default function ProductDetailPage({
       </button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-gray-200 aspect-square flex items-center justify-center text-gray-500">
-          상품 이미지
+        <div className="bg-gray-200 aspect-square flex items-center justify-center text-gray-500  w-full">
+          {product.imageUrl && (
+            <Image
+              src={product.imageUrl}
+              alt={product.name || "상품 이미지"}
+              width={500}
+              height={500}
+              placeholder="blur"
+              blurDataURL={product.imageUrl}
+              className="w-full h-full object-contain" // 컨테이너에 맞추면서 비율 유지
+            />
+          )}
         </div>
-
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
@@ -97,9 +119,6 @@ export default function ProductDetailPage({
           </div>
 
           <div>
-            <h2 className="text-lg font-medium text-gray-900 mb-2">
-              상품 설명
-            </h2>
             <p className="text-gray-600 whitespace-pre-line">
               {product.description}
             </p>

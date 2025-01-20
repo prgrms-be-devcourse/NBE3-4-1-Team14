@@ -1,11 +1,11 @@
 package com.ll.cafeservice.domain.order.controller.v1;
 
-import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.order.dto.request.OrderCheckRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
+import com.ll.cafeservice.domain.order.dto.response.OrderCreateResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderDeleteResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,18 +30,19 @@ public class OrderControllerV1 {
     private final OrderService orderService;
     @PostMapping
     @Operation(summary = "주문 요청", description = "주문 요청이 데이터베이스에 저장됩니다.")
-    public Result<OrderResponse> order(@RequestBody @Valid OrderRequest request){
+    public Result<OrderCreateResponse> order(@RequestBody @Valid OrderRequest request){
         log.info("주문 요청이 왔습니다.");
-        OrderResponse orderResponse = orderService.order(request);
+        OrderCreateResponse orderResponse = orderService.order(request);
         return Result.success(orderResponse);
     }
 
     // uuid로 단건조회
     @GetMapping
-    @Operation(summary = "주문 확인", description = "주문 요청을 확인")
-    public Result<OrderResponse>getOrderbyUuid(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
+    public Result<OrderResponse> getOrderbyUuid(
+            @RequestParam UUID orderUuid,
+            @RequestParam String password) {
         log.info("주문확인요청이 왔습니다.");
-        OrderResponse orderResponse = orderService.getOrderByOrderUuid(orderCheckRequest.orderUuid());
+        OrderResponse orderResponse = orderService.getOrderByOrderUuid(orderUuid);
         return Result.success(orderResponse);
     }
 

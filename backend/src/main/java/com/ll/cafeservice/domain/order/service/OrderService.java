@@ -4,6 +4,8 @@ import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderItemRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
+import com.ll.cafeservice.domain.order.dto.response.OrderCreateResponse;
+import com.ll.cafeservice.domain.order.dto.response.OrderItemResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderModifyResponse;
 import com.ll.cafeservice.domain.order.dto.response.OrderResponse;
 import com.ll.cafeservice.domain.order.exception.InSufficientStockException;
@@ -15,43 +17,32 @@ import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductDetailRepository productDetailRepository;
     private final OrderItemRepository orderItemRepository;
 
-
-    public OrderResponse order(OrderRequest request){
-        Order order = new Order();
-        order.setEmail(request.email());
-        order.setAddress(request.address());
-        order.setPw(request.pw());
-        order.setOrderDateTime(LocalDateTime.now());
-        OrderStatus orderStatus = alterOrderStatus(order);
-        order.setStatus(orderStatus);
-        order.setAddress(request.address());
-        order.setOrderUuid(UUID.randomUUID());
+    @Transactional
+    public OrderCreateResponse order(OrderRequest request){
+        Order order = Order.builder().email(request.email()).address(request.address()).pw(request.pw()).orderDateTime(LocalDateTime.now()).status(OrderStatus.WAITING).orderUuid(UUID.randomUUID()).build();
         List<OrderItem>orderItems = createOrderItems(request,order);
         order.setOrderItems(orderItems);
 
         long totalPrice = calculateTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        return new OrderResponse(order.getId(),order.getEmail(),orderItems,order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice());
+        return new OrderCreateResponse(order.getOrderUuid());
     }
 
+    @Transactional
     public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
         Order order = orderRepository.findByOrderUuid(modifyRequest.orderUuid());
         if(order.getStatus()!=OrderStatus.WAITING){
@@ -71,22 +62,36 @@ public class OrderService {
         List<Order>orders = orderRepository.findAll();
         List<OrderResponse>response = new ArrayList<>();
         for(Order order : orders){
-            response.add(new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice()));
+            response.add(
+                    new OrderResponse(
+                            order.getId(),
+                            order.getEmail(),
+                            createOrderItemResponses(order.getOrderItems()),
+                            order.getOrderUuid(),
+                            order.getStatus(),
+                            order.getAddress(),
+                            order.getTotalPrice(),
+                            order.getOrderDateTime()));
         }
         return response;
     }
 
     public OrderResponse getOrderByOrderUuid(UUID orderUuid){
         Order order = orderRepository.findByOrderUuid(orderUuid);
-        return new OrderResponse(order.getId(),order.getEmail(),order.getOrderItems(),order.getOrderUuid(),order.getStatus(),order.getAddress(),order.getTotalPrice());
+        return new OrderResponse(
+                order.getId(),
+                order.getEmail(),
+                createOrderItemResponses(order.getOrderItems()),
+                order.getOrderUuid(),
+                order.getStatus(),
+                order.getAddress(),
+                order.getTotalPrice(),
+                order.getOrderDateTime());
     }
 
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(order);
-        orderItem.setProduct(productDetail);
-        orderItem.setQuantity(orderItemRequest.quantity());
+        OrderItem orderItem = OrderItem.builder().order(order).product(productDetail).quantity(orderItemRequest.quantity()).build();
         orderItem.calculateTotalPrice();
         return orderItem;
     }
@@ -102,9 +107,12 @@ public class OrderService {
             OrderItem orderItem = createOrderItem(order,product,itemRequest);
             order.addOrderItem(orderItem);
             orderItems.add(orderItem);
+            product.updateQuantity(itemRequest.quantity());
         }
         return orderItems;
     }
+
+    @Transactional
     public void deleteOrder(OrderDeleteRequest orderDeleteRequest){
         Order order = orderRepository.findByOrderUuid(orderDeleteRequest.orderUuid());
         if(order.getStatus()!=OrderStatus.WAITING){
@@ -120,21 +128,25 @@ public class OrderService {
     private long calculateTotalPrice(List<OrderItem> orderItems){
         long totalPrice = 0;
         for(OrderItem orderItem : orderItems){
-            totalPrice += orderItem.getPrice();
+            totalPrice += (orderItem.getPrice() * orderItem.getQuantity());
         }
         return totalPrice;
     }
     private ProductDetail getProduct(Long productId){
-        Optional<ProductDetail> product = this.productDetailRepository.findById(productId);
-        return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
+        return productDetailRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("상품존재안함"));
     }
 
-    public OrderStatus alterOrderStatus(Order order){
-        LocalDateTime standardTime = LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0);
-        if(order.getOrderDateTime().isBefore(standardTime)){
-            return OrderStatus.COMPLETED;
+    private List<OrderItemResponse> createOrderItemResponses(List<OrderItem> orderItems){
+        List<OrderItemResponse>orderItemResponses = new ArrayList<>();
+        for(OrderItem orderItem : orderItems){
+            orderItemResponses.add(
+                    new OrderItemResponse(
+                            orderItem.getProduct().getName(),
+                            orderItem.getQuantity(),
+                            orderItem.getPrice()
+                    )
+            );
         }
-        return OrderStatus.WAITING;
+        return orderItemResponses;
     }
-
 }

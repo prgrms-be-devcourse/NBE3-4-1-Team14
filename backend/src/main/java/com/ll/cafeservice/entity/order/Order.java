@@ -3,8 +3,7 @@ package com.ll.cafeservice.entity.order;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,13 +12,15 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "order_id")
     @Column
     private Long id; // 주문자 id
 
@@ -36,7 +37,7 @@ public class Order extends BaseEntity {
     private UUID orderUuid;
 
     @Column(name = "order_at")
-    private LocalDateTime orderDateTime = LocalDateTime.now();
+    private LocalDateTime orderDateTime;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

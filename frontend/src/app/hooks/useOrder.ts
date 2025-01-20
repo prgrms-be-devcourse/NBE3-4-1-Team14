@@ -4,8 +4,8 @@ import { Product, OrderItem } from '../types';
 
 interface OrderRequest{
   orderDate: string;
-  items: OrderItem[];
-  totalAmount: number;
+  orderItems: OrderItem[];
+  password: string;
   email: string;
   address : string;
 }
@@ -14,8 +14,8 @@ export function useOrder() {
   const router = useRouter();
   const { cartCounts, setCartCounts } = useCart();
 
-  const createOrder = async (products: Product[], email: string, address: string) => {
-    console.log('createOrder called with:', { products, email, address });
+  const createOrder = async (products: Product[], email: string, address: string, password: string) => {
+    console.log('createOrder called with:', { products, email, address, password });
 
     if (Object.keys(cartCounts).length === 0) {
       alert('상품을 담아주세요!');
@@ -26,17 +26,14 @@ export function useOrder() {
       const product = products.find(p => p.id === Number(id));
       return {
         productId: Number(id),
-        productName: product?.name || '',
         quantity: count,
-        price: product?.price || 0,
-        totalPrice: (product?.price || 0) * count
       };
     });
 
     const order: OrderRequest = {
       orderDate: new Date().toISOString(),
-      items: orderItems,
-      totalAmount: orderItems.reduce((sum, item) => sum + item.totalPrice, 0),
+      orderItems: orderItems,
+      password : password,
       email : email,
       address : address
     };
@@ -44,7 +41,7 @@ export function useOrder() {
     console.log('Sending order:', order); // 요청 데이터 확인
 
     try {
-      const response = await fetch('http://localhost:7070/api/v1/order', {
+      const response = await fetch('http://localhost:8080/api/v1/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,6 +56,11 @@ export function useOrder() {
       if (result.statusCode !== 200) {
         throw new Error(result.message);
       }
+
+      // TODO : response로 넘어오는 주문 번호를 alert 한다.
+      const responseData = result.data;
+      alert("주문번호 발급: " + responseData.uuid);
+
       return true;
     } catch (error) {
       console.error('주문 생성 중 오류 발생:', error);
@@ -67,18 +69,18 @@ export function useOrder() {
     }
   };
 
-  const handleCheckout = async (products: Product[], email : string, address : string) => {
+  const handleCheckout = async (products: Product[], email : string, address : string, password: string) => {
 
     // 디버깅을 위한 로그 추가
-    console.log('handleCheckout called with:', { products, email, address });
+    console.log('handleCheckout called with:', { products, email, address , password});
 
     // validation 추가
-    if (!email || !address) {
+    if (!email || !address || !password) {
       alert('이메일과 주소를 입력해주세요.');
       return;
     }
 
-    const success = await createOrder(products, email, address);
+    const success = await createOrder(products, email, address, password);
     if (success) {
       setCartCounts({});
       alert('주문이 완료되었습니다!');

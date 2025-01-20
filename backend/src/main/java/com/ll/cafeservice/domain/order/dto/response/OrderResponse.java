@@ -1,9 +1,7 @@
 package com.ll.cafeservice.domain.order.dto.response;
 
-import com.ll.cafeservice.entity.order.OrderItem;
 import com.ll.cafeservice.entity.order.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.cglib.core.Local;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
@@ -22,7 +20,7 @@ public record OrderResponse (
 
         @Schema(description = "주문 품목")
         @NonNull
-        List<OrderItem>items, // 주문한 품목 리스트
+        List<OrderItemResponse>items, // 주문한 품목 리스트
 
         @Schema(description = "발급된 주문번호")
         UUID uuid,
@@ -34,5 +32,8 @@ public record OrderResponse (
         String address,
 
         @Schema(description = "주문 총액")
-        long totalPrice
+        long totalPrice,
+
+        @Schema(description = "주문 날짜")
+        LocalDateTime orderDate
 ) {}

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ class ProductServiceTest {
 
     @Mock
     private ProductImageManager productImageManager;
-
+  
     @Mock
     private ProductMapper productMapper;
 
@@ -153,7 +154,6 @@ class ProductServiceTest {
                 "img.jpg"
         );
         assertThat(updatedProduct.equals(expectedProduct)).isTrue();
-
     }
 }
 
