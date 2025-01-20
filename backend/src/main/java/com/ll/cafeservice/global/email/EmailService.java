@@ -16,11 +16,7 @@ public class EmailService {
 
     public void sendOrderEmail(String recipientEmail, List<String> orderNumbers) {
         String subject = "프로그래머스 백엔드 4회차 14팀 주문 발송 안내";
-
-        // 이메일 본문 생성
         String text = EmailTemplateBuilder.buildOrderEmail(recipientEmail, orderNumbers);
-
-        // 이메일 전송
         sendHtmlEmail(recipientEmail, subject, text);
     }
 
@@ -33,7 +29,7 @@ public class EmailService {
             helper.setText(text, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw new EmailServiceException("이메일 전송에 실패했습니다.", e);
         }
     }
 }
