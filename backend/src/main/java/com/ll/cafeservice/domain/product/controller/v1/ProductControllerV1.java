@@ -20,31 +20,30 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/product")
 public class ProductControllerV1 {
 
     private final ProductService productService;
 
     // 품목 추가
     @Operation(
-            summary = "품목 추가",
-            description = "품목을 등록합니다. 등록 시에 이미지 파일은 .png를 권장드립니다.")
-    @PostMapping
+        summary = "품목 추가",
+        description = "품목을 등록합니다. 등록 시에 이미지 파일은 .png를 권장드립니다.")
+    @PostMapping("/api/v1/admin/product")
     public Result<ProductCreateResponse> createProduct(
-            @ModelAttribute("request") ProductCreateRequest request
-    ){
+        @ModelAttribute("request") ProductCreateRequest request
+    ) {
         ProductCreateResponse response = productService.addProduct(request);
         return Result.success(response);
     }
 
     // 품목 수정
     @Operation(
-            summary = "품목 수정",
-            description = "품목을 수정합니다. 등록 시와 마찬가지의 데이터를 넘겨받습니다.")
-    @PutMapping("/{id}")
+        summary = "품목 수정",
+        description = "품목을 수정합니다. 등록 시와 마찬가지의 데이터를 넘겨받습니다.")
+    @PutMapping("/api/v1/admin/product/{id}")
     public Result<ProductUpdateResponse> updateProduct(
-            @PathVariable Long id,
-            @ModelAttribute("request") ProductUpdateRequest request
+        @PathVariable Long id,
+        @ModelAttribute("request") ProductUpdateRequest request
     ) {
         ProductUpdateResponse response = productService.updateProduct(id, request);
         return Result.success(response);
@@ -53,23 +52,23 @@ public class ProductControllerV1 {
 
     // 품목 리스트 반환
     @Operation(
-            summary = "품목 리스트 반환",
-            description = "품목의 리스트를 전달받습니다. 현재 활성화된 품목 전체를 반환합니다.")
-    @GetMapping("/list")
+        summary = "품목 리스트 반환",
+        description = "품목의 리스트를 전달받습니다. 현재 활성화된 품목 전체를 반환합니다.")
+    @GetMapping("/api/v1/product/list")
     public Result<List<ProductInfoResponse>> list(
-    ){
+    ) {
         List<ProductInfoResponse> response = productService.getList();
         return Result.success(response);
     }
 
     // 품목 삭제
     @Operation(
-            summary = "품목 삭제",
-            description = "품목을 삭제합니다. 실제로는 내부적으로 비활성화됩니다.")
-    @DeleteMapping("/{id}")
+        summary = "품목 삭제",
+        description = "품목을 삭제합니다. 실제로는 내부적으로 비활성화됩니다.")
+    @DeleteMapping("/api/v1/admin/product/{id}")
     public Result<ProductDeleteResponse> deleteProduct(
-            @PathVariable Long id
-    ){
+        @PathVariable Long id
+    ) {
         ProductDeleteResponse response = productService.deleteProduct(id);
         return Result.success(response);
     }
