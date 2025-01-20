@@ -6,8 +6,10 @@ import com.ll.cafeservice.domain.product.dto.request.ProductCreateRequest;
 import com.ll.cafeservice.domain.product.dto.request.ProductUpdateRequest;
 import com.ll.cafeservice.domain.product.dto.response.ProductCreateResponse;
 import com.ll.cafeservice.domain.product.dto.response.ProductInfoResponse;
+import com.ll.cafeservice.domain.product.implement.ProductImageManager;
 import com.ll.cafeservice.domain.product.implement.ProductManager;
 import com.ll.cafeservice.domain.product.implement.ProductReader;
+import com.ll.cafeservice.domain.product.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.List;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,10 +33,16 @@ class ProductServiceTest {
     @Mock
     private ProductReader productReader;
 
+    @Mock
+    private ProductImageManager productImageManager;
+
+    @Mock
+    private ProductMapper productMapper;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this); //Mock 객체 초기화.
-        productService = new ProductService(productManager, productReader);
+        productService = new ProductService(productManager, productReader, productImageManager, productMapper);
     }
 
     MockMultipartFile mockFile = new MockMultipartFile(
@@ -62,9 +69,9 @@ class ProductServiceTest {
 
         ProductCreateResponse response = productService.addProduct(request);
 
-        assertThat(response).isNotNull();
-        assertThat(response.id()).isEqualTo(1L);
-        assertThat(response.message()).isEqualTo("제품이 생성되었습니다.");
+        ProductCreateResponse expectedResponse = new ProductCreateResponse(1L, "제품이 생성되었습니다.");
+
+        assertThat(response.equals(expectedResponse)).isTrue();
     }
 
     @Test
@@ -88,27 +95,19 @@ class ProductServiceTest {
         );
 
         //productReader.findAll()이 위의 데이터 반환
-        when(productReader.findAll()).thenReturn(List.of(product1, product2));
+        when(productReader.findAllActivateProduct()).thenReturn(List.of(product1, product2));
 
         List<ProductInfoResponse> response = productService.getList();
+        //expectedList 생성
+        List<ProductInfoResponse> expectedList = List.of(
+                new ProductInfoResponse(1L, "커피", 100, 4500, "좋은커피", "img.jpg"),
+                new ProductInfoResponse(2L, "커피2", 50, 5000, "좋은커피2", "img1.jpg")
+        );
 
-        //반환 결과가 목록 포함하는지 확인
-        assertThat(response).isNotNull();
-        assertThat(response).hasSize(2);
-
-        assertThat(response.get(0).id()).isEqualTo(1L);
-        assertThat(response.get(0).name()).isEqualTo("커피");
-        assertThat(response.get(0).description()).isEqualTo("좋은커피");
-        assertThat(response.get(0).price()).isEqualTo(4500);
-        assertThat(response.get(0).quantity()).isEqualTo(100);
-        assertThat(response.get(0).imageUrl()).isEqualTo("img.jpg");
-
-        assertThat(response.get(1).id()).isEqualTo(2L);
-        assertThat(response.get(1).name()).isEqualTo("커피2");
-        assertThat(response.get(1).description()).isEqualTo("좋은커피2");
-        assertThat(response.get(1).price()).isEqualTo(5000);
-        assertThat(response.get(1).quantity()).isEqualTo(50);
-        assertThat(response.get(1).imageUrl()).isEqualTo("img1.jpg");
+        //리스트의 각 항목 비교
+        for (int i = 0; i < response.size(); i++) {
+            assertThat(response.get(i).equals(expectedList.get(i))).isTrue();
+        }
     }
 
     @Test
@@ -129,7 +128,8 @@ class ProductServiceTest {
                 "커피123",
                 9999,
                 "좋은커피123",
-                99
+                99,
+                mockFile
         );
         //productReader.findById가 기존 product 반환
         when(productReader.findById(productId)).thenReturn(existingProduct);
@@ -140,16 +140,19 @@ class ProductServiceTest {
                 updateRequest.description(),
                 updateRequest.price(),
                 updateRequest.quantity(),
-                existingProduct.getImageUrl() //기존의 것 사용
+                existingProduct.getImgFilename() //기존의 것 사용
 
         );
-        assertThat(updatedProduct).isNotNull();
-        assertThat(updatedProduct.getId()).isEqualTo(productId);
-        assertThat(updatedProduct.getName()).isEqualTo("커피123");
-        assertThat(updatedProduct.getDescription()).isEqualTo("좋은커피123");
-        assertThat(updatedProduct.getPrice()).isEqualTo(9999);
-        assertThat(updatedProduct.getQuantity()).isEqualTo(99);
-        assertThat(updatedProduct.getImageUrl()).isEqualTo("img.jpg");
+
+        Product expectedProduct = new Product(
+                productId,
+                "커피123",
+                "좋은커피123",
+                9999,
+                99,
+                "img.jpg"
+        );
+        assertThat(updatedProduct.equals(expectedProduct)).isTrue();
 
     }
 }

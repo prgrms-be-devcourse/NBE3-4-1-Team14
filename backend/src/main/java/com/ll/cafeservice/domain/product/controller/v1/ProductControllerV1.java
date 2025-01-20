@@ -46,7 +46,7 @@ public class ProductControllerV1 {
             @PathVariable Long id,
             @ModelAttribute("request") ProductUpdateRequest request
     ) {
-        ProductUpdateResponse response = productService.updatedProduct(id, request);
+        ProductUpdateResponse response = productService.updateProduct(id, request);
         return Result.success(response);
 
     }
