@@ -2,10 +2,8 @@ package com.ll.cafeservice.global.exception;
 
 import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
-import com.ll.cafeservice.security.exception.CustomJwtException;
-import com.ll.cafeservice.security.exception.InvalidCredentialsException;
-import com.ll.cafeservice.global.exception.image.ImageStoreException;
-import com.ll.cafeservice.global.exception.image.ImageResourceNotFoundException;
+import com.ll.cafeservice.global.security.exception.CustomJwtException;
+import com.ll.cafeservice.global.security.exception.InvalidCredentialsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

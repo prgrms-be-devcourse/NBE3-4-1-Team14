@@ -1,6 +1,6 @@
-package com.ll.cafeservice.security.jwt;
+package com.ll.cafeservice.global.security.jwt;
 
-import com.ll.cafeservice.security.exception.CustomJwtException;
+import com.ll.cafeservice.global.security.exception.CustomJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
