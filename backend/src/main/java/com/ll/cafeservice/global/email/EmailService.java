@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class EmailService {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     @Autowired
     private JavaMailSender mailSender;
@@ -29,7 +33,7 @@ public class EmailService {
             helper.setText(text, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new EmailServiceException("이메일 전송에 실패했습니다.", e);
+            logger.error("이메일 전송 실패, 이메일 : " + to, e);
         }
     }
 }

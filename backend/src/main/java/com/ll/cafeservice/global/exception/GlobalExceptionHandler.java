@@ -2,7 +2,6 @@ package com.ll.cafeservice.global.exception;
 
 import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
-import com.ll.cafeservice.global.email.EmailServiceException;
 import com.ll.cafeservice.global.security.exception.CustomJwtException;
 import com.ll.cafeservice.global.security.exception.InvalidCredentialsException;
 import org.springframework.http.HttpStatus;
@@ -30,11 +29,5 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     public Result<Empty> handleProductNotFoundException(ProductNotFoundException e){
         return Result.error(404, e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(EmailServiceException.class)
-    public Result<Empty> handleEmailServiceException(EmailServiceException e) {
-        return Result.error(500, "이메일 전송에 실패했습니다. 관리자에게 문의하세요.");
     }
 }
