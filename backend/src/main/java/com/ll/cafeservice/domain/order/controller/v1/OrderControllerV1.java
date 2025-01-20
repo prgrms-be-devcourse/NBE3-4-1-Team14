@@ -1,6 +1,5 @@
 package com.ll.cafeservice.domain.order.controller.v1;
 
-import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
 import com.ll.cafeservice.domain.order.dto.request.OrderCheckRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
