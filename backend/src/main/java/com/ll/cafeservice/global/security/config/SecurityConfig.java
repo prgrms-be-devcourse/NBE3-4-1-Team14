@@ -1,9 +1,9 @@
-package com.ll.cafeservice.security.config;
+package com.ll.cafeservice.global.security.config;
 
-import com.ll.cafeservice.security.handler.CustomAccessDeniedHandler;
-import com.ll.cafeservice.security.handler.CustomAuthenticationEntryPoint;
-import com.ll.cafeservice.security.jwt.JwtAuthenticationFilter;
-import com.ll.cafeservice.security.jwt.JwtProvider;
+import com.ll.cafeservice.global.security.handler.CustomAccessDeniedHandler;
+import com.ll.cafeservice.global.security.handler.CustomAuthenticationEntryPoint;
+import com.ll.cafeservice.global.security.jwt.JwtAuthenticationFilter;
+import com.ll.cafeservice.global.security.jwt.JwtProvider;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
