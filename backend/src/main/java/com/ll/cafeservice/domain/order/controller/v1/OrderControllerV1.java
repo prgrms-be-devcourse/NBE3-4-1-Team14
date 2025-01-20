@@ -1,8 +1,6 @@
 package com.ll.cafeservice.domain.order.controller.v1;
 
-import com.ll.cafeservice.api.Empty;
 import com.ll.cafeservice.api.Result;
-import com.ll.cafeservice.domain.order.dto.request.OrderCheckRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderDeleteRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderModifyRequest;
 import com.ll.cafeservice.domain.order.dto.request.OrderRequest;
@@ -16,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,9 +47,9 @@ public class OrderControllerV1 {
 
     // 전체조회
     @GetMapping("/list")
-    @Operation(summary = "관리자 전체 목록 확인")
-    public Result<List<OrderResponse>>getOrderList(@RequestBody @Valid OrderCheckRequest orderCheckRequest){
-        log.info("관리자 페이지 주문리스트 확인 요청이 왔습니다.");
+    @Operation(summary = "관리자 전체 주문 목록 조회")
+    public Result<List<OrderResponse>> getOrderList() {
+        log.info("관리자가 전체 주문 목록 조회를 요청했습니다.");
         List<OrderResponse> orderResponse = orderService.getOrders();
         return Result.success(orderResponse);
     }
