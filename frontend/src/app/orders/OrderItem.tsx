@@ -30,7 +30,7 @@ export default function OrderItem({ order }: OrderItemProps) {
             주문일시: {formatDate(order.orderDate)}
           </p>
           <p className="text-sm font-medium text-gray-900">
-            주문번호: {order.orderId}
+            주문번호: {order.uuid}
           </p>
         </div>
         <div className="mt-2">

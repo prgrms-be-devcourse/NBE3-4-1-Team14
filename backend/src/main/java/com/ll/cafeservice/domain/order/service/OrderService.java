@@ -141,6 +141,7 @@ public class OrderService {
         for(OrderItem orderItem : orderItems){
             orderItemResponses.add(
                     new OrderItemResponse(
+                            orderItem.getId(),
                             orderItem.getProduct().getName(),
                             orderItem.getQuantity(),
                             orderItem.getPrice()
