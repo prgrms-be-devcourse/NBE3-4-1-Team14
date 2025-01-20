@@ -3,9 +3,7 @@ package com.ll.cafeservice.entity.order;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,12 +14,13 @@ import java.util.UUID;
 @Setter
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "order_id")
     @Column
     private Long id; // 주문자 id
 
@@ -44,21 +43,6 @@ public class Order extends BaseEntity {
     private OrderStatus status;
 
     private long totalPrice;     // 총 가격
-
-    public Order(){
-
-    }
-    public Order(Long id, String email, String address, int pw, UUID orderUuid, LocalDateTime orderDateTime, OrderStatus status, long totalPrice, List<OrderItem> orderItems) {
-        this.id = id;
-        this.email = email;
-        this.address = address;
-        this.pw = pw;
-        this.orderUuid = orderUuid;
-        this.orderDateTime = orderDateTime;
-        this.status = status;
-        this.totalPrice = totalPrice;
-        this.orderItems = orderItems;
-    }
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
