@@ -17,23 +17,20 @@ import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductDetailRepository productDetailRepository;
     private final OrderItemRepository orderItemRepository;
 
+    @Transactional
     public OrderCreateResponse order(OrderRequest request){
         Order order = Order.builder().email(request.email()).address(request.address()).pw(request.pw()).orderDateTime(LocalDateTime.now()).status(OrderStatus.WAITING).orderUuid(UUID.randomUUID()).build();
         List<OrderItem>orderItems = createOrderItems(request,order);
@@ -45,6 +42,7 @@ public class OrderService {
         return new OrderCreateResponse(order.getOrderUuid());
     }
 
+    @Transactional
     public OrderModifyResponse modifyOrder(OrderModifyRequest modifyRequest){
         Order order = orderRepository.findByOrderUuid(modifyRequest.orderUuid());
         if(order.getStatus()!=OrderStatus.WAITING){
@@ -114,9 +112,7 @@ public class OrderService {
         return orderItems;
     }
 
-    private void updateProductQuantity(ProductDetail product, int orderedQuantity){
-        int newQuantity = product.getQuantity() - orderedQuantity;
-    }
+    @Transactional
     public void deleteOrder(OrderDeleteRequest orderDeleteRequest){
         Order order = orderRepository.findByOrderUuid(orderDeleteRequest.orderUuid());
         if(order.getStatus()!=OrderStatus.WAITING){
@@ -137,10 +133,8 @@ public class OrderService {
         return totalPrice;
     }
     private ProductDetail getProduct(Long productId){
-        Optional<ProductDetail> product = this.productDetailRepository.findById(productId);
-        return product.orElseThrow(()->new IllegalArgumentException("상품존재안함"));
+        return productDetailRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("상품존재안함"));
     }
-
 
     private List<OrderItemResponse> createOrderItemResponses(List<OrderItem> orderItems){
         List<OrderItemResponse>orderItemResponses = new ArrayList<>();

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record OrderModifyRequest(
-
         String address,
 
         @NotNull
@@ -18,7 +17,5 @@ public record OrderModifyRequest(
 
         @NotNull(message = "주문 번호는 필수 입니다.")
         UUID orderUuid
-
 ) {
-
 }

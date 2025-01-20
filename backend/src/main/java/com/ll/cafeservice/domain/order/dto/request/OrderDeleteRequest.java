@@ -12,5 +12,6 @@ public record OrderDeleteRequest(
 
         @NotNull(message = "주문 번호는 필수 입니다.")
         UUID orderUuid
+        
 ) {
 }

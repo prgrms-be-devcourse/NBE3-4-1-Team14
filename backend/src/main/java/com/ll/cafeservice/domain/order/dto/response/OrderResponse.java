@@ -1,9 +1,7 @@
 package com.ll.cafeservice.domain.order.dto.response;
 
-import com.ll.cafeservice.entity.order.OrderItem;
 import com.ll.cafeservice.entity.order.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.cglib.core.Local;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
