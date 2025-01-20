@@ -37,7 +37,20 @@ export default async function Page() {
 
           const imageData = await imageResponse.json();
           const base64String = imageData.data.contentAsByteArray;
-          const contentType = "image/png";
+
+          // 파일 확장자명을 확인해서 정해준다.
+          const fileExtension = product.filename
+            .split(".")
+            .pop()
+            ?.toLowerCase();
+          let contentType = "image/png"; // 기본값
+          switch (fileExtension) {
+            case "jpg":
+            case "jpeg":
+              contentType = "image/jpeg";
+              break;
+          }
+
           const base64Url = `data:${contentType};base64,${base64String}`;
 
           return {
