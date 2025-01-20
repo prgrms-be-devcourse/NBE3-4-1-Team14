@@ -1,4 +1,5 @@
 "use client";
+
 import { Order } from "../types";
 
 interface OrderItemProps {
@@ -29,7 +30,7 @@ export default function OrderItem({ order }: OrderItemProps) {
             주문일시: {formatDate(order.orderDate)}
           </p>
           <p className="text-sm font-medium text-gray-900">
-            주문번호: {order.orderId}
+            주문번호: {order.uuid}
           </p>
         </div>
         <div className="mt-2">
@@ -41,16 +42,18 @@ export default function OrderItem({ order }: OrderItemProps) {
         <div className="space-y-3">
           {order.items?.map((item) => (
             <div
-              key={item.productId}
+              key={item.id}
               className="flex justify-between items-center text-sm"
             >
               <div>
-                <p className="text-gray-900 font-medium">{item.productName}</p>
+                <p className="text-gray-900 font-medium">{item.name}</p>
                 <p className="text-gray-600">
                   {formatPrice(item.price)}원 × {item.quantity}개
                 </p>
               </div>
-              <p className="text-gray-900">{formatPrice(item.totalPrice)}원</p>
+              <p className="text-gray-900">
+                {formatPrice(item.price * item.quantity)}원
+              </p>
             </div>
           ))}
         </div>
@@ -59,7 +62,7 @@ export default function OrderItem({ order }: OrderItemProps) {
           <div className="flex justify-between items-center">
             <p className="text-sm font-medium text-gray-900">총 결제금액</p>
             <p className="text-lg font-bold text-gray-900">
-              {formatPrice(order.totalAmount)}원
+              {formatPrice(order.totalPrice)}원
             </p>
           </div>
         </div>

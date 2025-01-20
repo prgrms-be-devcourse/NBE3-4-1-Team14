@@ -7,6 +7,7 @@ export function CheckoutButton({ products }: CheckoutButtonProps) {
   const { handleCheckout } = useOrder();
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [passwrod, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +20,7 @@ export function CheckoutButton({ products }: CheckoutButtonProps) {
       alert("이메일과 주소를 모두 입력해주세요.");
       return;
     }
-    handleCheckout(products, email, address);
+    handleCheckout(products, email, address, passwrod);
   };
 
   return (
@@ -59,6 +60,28 @@ export function CheckoutButton({ products }: CheckoutButtonProps) {
           className="w-full text-gray-700 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
         />
       </div>
+
+      <label
+        htmlFor="email"
+        className="block text-sm font-medium text-gray-700 mb-1"
+      >
+        주문 비밀번호
+      </label>
+      <input
+        type="password"
+        id="password"
+        required
+        value={passwrod}
+        onChange={(e) => {
+          const value = e.target.value;
+          // 숫자만 허용하고 4자리로 제한
+          if (/^\d*$/.test(value) && value.length <= 4) {
+            setPassword(value);
+          }
+        }}
+        placeholder="주문 조회용으로 사용할 비밀번호 입력"
+        className="w-full text-gray-700 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+      />
 
       <button
         type="submit"

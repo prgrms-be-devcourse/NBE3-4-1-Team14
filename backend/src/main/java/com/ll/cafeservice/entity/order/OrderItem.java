@@ -1,39 +1,40 @@
 package com.ll.cafeservice.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ll.cafeservice.entity.base.BaseEntity;
 import com.ll.cafeservice.entity.product.product.ProductDetail;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Entity
+import lombok.*;
+
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "order_items")
 public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderItem_id")
+    @Column
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 설정 추가
-    @JoinColumn(name = "order_id" , nullable = false)
-    private Order order;
-
-    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 설정 추가
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "product_id", nullable = false)
     private ProductDetail product;
 
-    private int quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    @JsonBackReference
+    private Order order;
 
-    private double price;
+    private int quantity; // 수량
 
-    // 생성자 추가
-    public OrderItem(Order order, ProductDetail product, int quantity, double price) {
-        this.order = order;
-        this.product = product;
-        this.quantity = quantity;
-        this.price = price;
+    private long price; // 가격
+
+    public void calculateTotalPrice(){
+        this.price = quantity*product.getPrice();
     }
 }
