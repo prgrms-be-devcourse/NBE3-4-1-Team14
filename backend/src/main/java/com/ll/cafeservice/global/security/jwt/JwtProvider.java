@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -34,21 +35,18 @@ public class JwtProvider {
             .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    public String resolveTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("access_key".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
-//        // 쿠키에서 토큰 검색
-//        if (request.getCookies() != null) {
-//            for (Cookie cookie : request.getCookies()) {
-//                if ("Authorization".equals(cookie.getName())) {
-//                    return cookie.getValue().replace("Bearer ", "");
-//                }
-//            }
-//        }
         return null;
     }
+
 
 
     public String getUsername(String token) {
