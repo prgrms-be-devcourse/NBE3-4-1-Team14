@@ -1,4 +1,4 @@
-package com.ll.cafeservice.security.handler;
+package com.ll.cafeservice.global.security.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
