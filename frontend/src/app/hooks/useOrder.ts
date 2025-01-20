@@ -83,7 +83,7 @@ export function useOrder() {
     const success = await createOrder(products, email, address, password);
     if (success) {
       setCartCounts({});
-      alert('주문이 완료되었습니다!');
+      alert('주문이 완료되었습니다. \n해당 주문은 다음 날 14시에 배송 시작됩니다!');
       router.push('/orders');
     }
   };
