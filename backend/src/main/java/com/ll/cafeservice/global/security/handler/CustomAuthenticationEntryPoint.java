@@ -22,9 +22,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         Exception exception = (Exception) request.getAttribute("JwtException");
         if (exception != null) {
-            resolver.resolveException(request, response, null, exception); // JwtException 위임
+            resolver.resolveException(request, response, null, exception);
         } else {
-            resolver.resolveException(request, response, null, authException); // 기본 예외 처리
+            resolver.resolveException(request, response, null, authException);
         }
     }
 
