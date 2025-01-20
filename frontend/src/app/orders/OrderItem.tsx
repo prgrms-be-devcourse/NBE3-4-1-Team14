@@ -21,7 +21,7 @@ export default function OrderItem({ order }: OrderItemProps) {
       minute: "2-digit",
     });
   };
-
+  console.log(order.items?.map((item) => item.id));
   return (
     <div className="border border-gray-100 rounded-lg shadow-sm">
       <div className="px-4 py-3 border-b border-gray-100">
@@ -30,7 +30,7 @@ export default function OrderItem({ order }: OrderItemProps) {
             주문일시: {formatDate(order.orderDate)}
           </p>
           <p className="text-sm font-medium text-gray-900">
-            주문번호: {order.orderId}
+            주문번호: {order.uuid}
           </p>
         </div>
         <div className="mt-2">

@@ -42,14 +42,11 @@ export interface OrderItemInfo{
   id: number;
   name : string;
   price : number;
-  status : string;
-  description : string;
-  createdAt : Date;
   quantity: number;
 }
 
 export interface Order {
-  orderId: number;
+  id: number;
   email: string;
   items: OrderItemInfo[];
   uuid: string;
