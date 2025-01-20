@@ -43,7 +43,7 @@ public class DeliveryService {
 
     private Map<String, List<Order>> groupOrdersByEmail(List<Order> orders) {
         return orders.stream()
-            .collect(Collectors.groupingBy(order -> order.getEmail()));
+            .collect(Collectors.groupingBy(Order::getEmail));
     }
 
     private List<String> extractOrderNumbers(List<Order> orders) {
