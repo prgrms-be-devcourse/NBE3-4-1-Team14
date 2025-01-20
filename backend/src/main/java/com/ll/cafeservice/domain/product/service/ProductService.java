@@ -25,7 +25,7 @@ public class ProductService {
     private final ProductImageManager productImageManager;
     private final ProductMapper productMapper;
 
-    private Product getExistingProduct(Long id) { //조회 메서드
+    private Product getProduct(Long id) { //조회 메서드
         return productReader.findById(id);
     }
 
@@ -62,14 +62,14 @@ public class ProductService {
     public ProductUpdateResponse updateProduct(Long id, ProductUpdateRequest request) {
 
         //제품 데이터 조회
-        Product existingProduct = getExistingProduct(id);
+        Product getProduct = getProduct(id);
 
         // 기존 이미지 삭제 및 새로운 이미지 저장
-        productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
+        productImageManager.deleteProductImageByFilename(getProduct.getImgFilename());
         String newImageFilename = productImageManager.storeProductImage(request.image());
 
         //요청 데이터를 이용하여 기존 제품 정보 수정
-        Product updatedProduct = existingProduct.updateProduct(
+        Product updatedProduct = getProduct.updateProduct(
                 request.name(),
                 request.price(),
                 request.description(),
@@ -89,7 +89,7 @@ public class ProductService {
         // productImageManager.deleteProductImageByFilename(existingProduct.getImgFilename());
 
         // 제품 비활성화
-        productManager.deactivateProduct(getExistingProduct(id));
+        productManager.deactivateProduct(getProduct(id));
 
         // 삭제 완료 응답
         return new ProductDeleteResponse(id, ResponseMessages.PRODUCT_DELETED);
