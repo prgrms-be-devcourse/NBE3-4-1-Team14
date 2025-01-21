@@ -1,6 +1,6 @@
 "use client";
 
-import OrderItem from "@/app/orders/OrderItem";
+import OrderItem from "./OrderItem";
 import { Order } from "@/app/types";
 import { useState } from "react";
 

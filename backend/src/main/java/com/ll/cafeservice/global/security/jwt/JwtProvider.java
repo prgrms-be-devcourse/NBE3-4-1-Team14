@@ -8,15 +8,16 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Date;
-import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
 
 @Component
 public class JwtProvider {
 
-    @Value("${JWT_SECRERT_KEY}")
+    @Value("${JWT_SECRET_KEY}")
     private String secretKey;
 
     @Value("${JWT_VALIDITY_IN_MS}")
@@ -32,7 +33,7 @@ public class JwtProvider {
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder().setSubject(username).setIssuedAt(now).setExpiration(validity)
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public String resolveTokenFromCookie(HttpServletRequest request) {
@@ -51,7 +52,7 @@ public class JwtProvider {
 
     public String getUsername(String token) {
         Claims claims = Jwts.parser().setSigningKey(getSigningKey()).parseClaimsJws(token)
-            .getBody();
+                .getBody();
         return claims.getSubject();
     }
 
@@ -67,7 +68,4 @@ public class JwtProvider {
             throw new CustomJwtException("유효하지 않은 토큰입니다.");
         }
     }
-
-
-
 }

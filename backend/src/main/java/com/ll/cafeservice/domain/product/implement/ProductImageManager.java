@@ -47,6 +47,7 @@ public class ProductImageManager {
         }
 
         try{
+            log.info(getFullPath(filename));
             return new UrlResource("file:" + getFullPath(filename));
         } catch (Exception e) {
             throw new ImageResourceNotFoundException("요청한 이미지가 존재하지 않습니다.");
