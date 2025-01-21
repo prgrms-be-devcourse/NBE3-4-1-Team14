@@ -16,12 +16,14 @@ import com.ll.cafeservice.entity.product.product.ProductDetail;
 import com.ll.cafeservice.entity.product.product.ProductDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -32,8 +34,14 @@ public class OrderService {
 
     @Transactional
     public OrderCreateResponse order(OrderRequest request){
-        Order order = Order.builder().email(request.email()).address(request.address()).pw(request.pw()).orderDateTime(LocalDateTime.now()).status(OrderStatus.WAITING).orderUuid(UUID.randomUUID()).build();
-        List<OrderItem>orderItems = createOrderItems(request,order);
+        Order order = Order.builder()
+                .email(request.email())
+                .address(request.address())
+                .pw(request.pw())
+                .orderDateTime(LocalDateTime.now())
+                .status(OrderStatus.WAITING)
+                .orderUuid(UUID.randomUUID()).build();
+        List<OrderItem>orderItems = createOrderItems(request, order);
         order.setOrderItems(orderItems);
 
         long totalPrice = calculateTotalPrice(orderItems);
@@ -91,7 +99,11 @@ public class OrderService {
 
     //상품품목하나에대한 생성
     public OrderItem createOrderItem(Order order,ProductDetail productDetail,OrderItemRequest orderItemRequest){
-        OrderItem orderItem = OrderItem.builder().order(order).product(productDetail).quantity(orderItemRequest.quantity()).build();
+        OrderItem orderItem = OrderItem.builder()
+                .order(order)
+                .product(productDetail)
+                .quantity(orderItemRequest.quantity())
+                .build();
         orderItem.calculateTotalPrice();
         return orderItem;
     }
@@ -101,6 +113,8 @@ public class OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemRequest itemRequest : request.orderItems()){
             ProductDetail product = getProduct(itemRequest.productId());
+            log.info(product.toString());
+
             if(product.getQuantity()<itemRequest.quantity()){
                 throw new InSufficientStockException("재고가 부족합니다.");
             }
@@ -128,7 +142,7 @@ public class OrderService {
     private long calculateTotalPrice(List<OrderItem> orderItems){
         long totalPrice = 0;
         for(OrderItem orderItem : orderItems){
-            totalPrice += (orderItem.getPrice() * orderItem.getQuantity());
+            totalPrice += ((long) orderItem.getProduct().getPrice() * orderItem.getQuantity());
         }
         return totalPrice;
     }
@@ -144,7 +158,7 @@ public class OrderService {
                             orderItem.getId(),
                             orderItem.getProduct().getName(),
                             orderItem.getQuantity(),
-                            orderItem.getPrice()
+                            orderItem.getProduct().getPrice()
                     )
             );
         }

@@ -4,5 +4,5 @@ public record OrderItemResponse(
         Long id,
         String name,
         int quantity,
-        Long price
+        Integer price
 ) { }
