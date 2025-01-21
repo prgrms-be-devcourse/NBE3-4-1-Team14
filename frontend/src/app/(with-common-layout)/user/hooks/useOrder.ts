@@ -48,8 +48,16 @@ export function useOrder() {
         },
         body: JSON.stringify(order),
       });
-      if (!response.ok) {
-        throw new Error('주문 생성에 실패했습니다.');
+
+      // status로 구체적인 에러 처리
+      if (response.status === 400) {
+        throw new Error('재고가 부족합니다.');
+      }
+      if (response.status === 404) {
+        throw new Error('API를 찾을 수 없습니다');
+      }
+      if (response.status === 500) {
+        throw new Error('서버 오류입니다');
       }
 
       const result = await response.json();
@@ -63,8 +71,10 @@ export function useOrder() {
 
       return true;
     } catch (error) {
-      console.error('주문 생성 중 오류 발생:', error);
-      alert('주문 생성에 실패했습니다.');
+      if(error instanceof Error){
+        console.error('주문 생성 중 오류 발생:', error);
+        alert('주문 생성에 실패했습니다. 원인 : ' + error.message);
+      }
       return false;
     }
   };
