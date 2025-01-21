@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, {ReactNode, useState} from "react";
 import { CartState, ClientLayoutProps } from "./types";
 import { CartContext } from "./hooks/useCart";
 
-export default function ClientLayout({ children }: ClientLayoutProps) {
+export default function ClientLayout({ children }: ClientLayoutProps):ReactNode {
   const [cartCounts, setCartCounts] = useState<CartState>({});
   const [selectedCounts, setSelectedCounts] = useState<CartState>({});
 

@@ -9,6 +9,18 @@ export interface Product {
   imageUrl: string;
 }
 
+// 상품 상세데이터 타입 정의
+export interface ProductDetail {
+  id: number | null;            // 상품 ID
+  name: string;                 // 제품 이름
+  description: string;          // 제품 설명
+  price: number;                // 가격
+  quantity: number;             // 수량
+  imgFilename?: string;         // 서버에 저장된 이미지 파일 이름
+  imgFile?: File;               // 업로드할 이미지 파일
+}
+
+
 // 컴포넌트 Props 타입들
 export interface ProductListProps {
   products: Product[];

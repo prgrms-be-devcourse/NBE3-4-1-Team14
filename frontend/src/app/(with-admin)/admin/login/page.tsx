@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -26,13 +26,6 @@ export default function LoginPage() {
         }
     }
 
-    // // 헤더 스타일 변경(테스트중) - 한얼FT님 작성(수정예정)
-    // useEffect(() => {
-    //     const header = document.getElementById("main-header")
-    //     if (!header)return;
-    //     header.style
-    // }, []);
-
     // 로그인 요청 핸들러
     async function handleLogin(event: React.FormEvent) {
         event.preventDefault(); // 폼 기본 동작 중단
@@ -40,27 +33,29 @@ export default function LoginPage() {
         setError(""); // 기존 에러 초기화
 
         try {
-            const response = await fetch("/api/auth/login", {
+            const response = await fetch("http://localhost:8080/api/v1/admin/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ adminId, password }), // JSON 형태로 요청 데이터 전송
+                // JWT를 쿠키에 저장하고 요청마다 포함하도록 설정
+                credentials: "include", // 쿠키 전송 설정
+                body: JSON.stringify({ username: adminId, password }), // JSON 형태로 요청 데이터 전송
             });
 
             handleErrorResponse(response); // 응답 상태 코드에 따른 에러 처리
 
             const data = await response.json(); // JSON 형태로 응답 데이터 파싱
 
-            // document.cookie = `token=${data.token}; path=/; secure; httponly`; // 보안 부분
+            router.push("/admin/board"); // 인증 성공 후 관리자 페이지로 이동
 
-            router.push("/admin/board"); // 관리자 페이지로 이동
-        } catch (err : any) {
+        } catch (err: any) {
             setError(err.message); // 에러 메시지 표시
-
             console.error(`Login error: ${err.message}`); // 디버깅용 로깅
+
         } finally {
             setLoading(false); // 로딩 상태 종료
+
         }
     }
 
