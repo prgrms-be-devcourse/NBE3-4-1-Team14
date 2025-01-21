@@ -9,23 +9,38 @@ interface NavigationBarProps {
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ onChangePage }) => {
     const [currentPage, setCurrentPage] = useState("product");
+    const [loading, setLoading] = useState(false); // 서버 요청 대기 상태
+    const [error, setError] = useState("");
+    const router = useRouter();
+
 
     const handlePageChange = (page: string) => {
         setCurrentPage(page);
         onChangePage(page);
     };
 
-    const handleLogout = () => {
-        // 토큰 삭제
-        localStorage.removeItem("authToken");
+    // 로그아웃 요청 핸들러
+    async function handleLogout() {
+        setLoading(true); // 로딩 상태 시작
+        setError(""); // 기존 에러 초기화
 
-        // 알림 메시지
-        alert("로그아웃 성공!");
+        try {
+            const response = await fetch("http://localhost:8080/api/v1/admin/logout", {
+                method: "POST", // 로그아웃은 POST 요청
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include", // 쿠키 전송 설정
+            });
+            router.push("/admin/login"); // 로그아웃 후 로그인 페이지로 리다이렉트
+        } catch (err: any) {
+            setError(err.message); // 에러 메시지 표시
+            console.error(`Logout error: ${err.message}`); // 디버깅용 로깅
+        } finally {
+            setLoading(false); // 로딩 상태 종료
+        }
+    }
 
-        // SPA 방식으로 리다이렉트
-        const router = useRouter();
-        router.push("/admin");
-    };
 
     return (
         <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
